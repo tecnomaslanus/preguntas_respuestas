@@ -511,11 +511,11 @@
     <div class="modal">
       <div class="modal-title">Cargar desde la Nube</div>
       <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">
-        Ingresa tu Sync ID existente para descargar y sincronizar las respuestas en este dispositivo.
+        Ingresa el Sync ID generado en el primer dispositivo para descargar las respuestas de Tecnomas.
       </p>
       <div class="form-group">
         <label>Sync ID de Tecnomas</label>
-        <input type="text" id="inputSyncId" class="form-control" placeholder="Ej: 65a123bc45de6789..." required>
+        <input type="text" id="inputSyncId" class="form-control" placeholder="Pega el Sync ID aquí..." required>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeModal('syncModal')">Cancelar</button>
@@ -549,10 +549,8 @@
   <div class="toast" id="toast">¡Copiado al portapapeles!</div>
 
   <script>
-    // Configuración API JsonStorage
     const JSONSTORAGE_API_KEY = "3ece9911-23ff-4eca-bb69-feaf41441344";
     
-    // Datos iniciales por defecto de Tecnomas
     const defaultData = {
       categories: ["General", "Horarios", "Envíos", "Garantías", "Pagos"],
       responses: [
@@ -577,7 +575,6 @@
       ]
     };
 
-    // Estado global de la app
     let state = {
       categories: [],
       responses: [],
@@ -585,7 +582,6 @@
       syncId: localStorage.getItem("tecnomas_sync_id") || ""
     };
 
-    // Inicialización
     document.addEventListener("DOMContentLoaded", () => {
       loadLocalState();
       updateSyncDisplay();
@@ -623,7 +619,7 @@
       display.textContent = state.syncId ? state.syncId : "No generado (Haz clic en Guardar)";
     }
 
-    // --- Sincronización con JsonStorage.net API corregida ---
+    // --- Sincronización con JsonStorage.net API ---
 
     async function saveToCloud() {
       showToast("Sincronizando con la nube...");
@@ -634,15 +630,14 @@
       };
 
       try {
-        // Si hay un Sync ID guardado, intentamos actualizar con PUT
         if (state.syncId) {
+          // Actualización mediante PUT
           const putResponse = await fetch(`https://api.jsonstorage.net/v1/json/${state.syncId}?apiKey=${JSONSTORAGE_API_KEY}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
 
-          // Si da 404 (el ID ya no existe en el servidor), lo limpiamos y forzamos creación por POST abajo
           if (putResponse.status === 404) {
             state.syncId = "";
             localStorage.removeItem("tecnomas_sync_id");
@@ -654,7 +649,7 @@
           }
         }
 
-        // Si no hay Sync ID o falló por 404, creamos uno nuevo mediante POST
+        // Crear nuevo espacio con POST
         const postResponse = await fetch(`https://api.jsonstorage.net/v1/json?apiKey=${JSONSTORAGE_API_KEY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -664,19 +659,16 @@
         if (!postResponse.ok) throw new Error(`HTTP Error: ${postResponse.status}`);
         
         const result = await postResponse.json();
-        // Extraer ID de la uri devuelta por jsonstorage.net
-        let createdId = "";
+        let fullPath = "";
+        
         if (result.uri) {
-          const parts = result.uri.split('/');
-          createdId = parts[parts.length - 1];
-        }
-        if (!createdId) {
-          createdId = result.id || result.objectId || "";
+          // Extraer la ruta {userId}/{itemId} de la URI completa
+          fullPath = result.uri.replace("https://api.jsonstorage.net/v1/json/", "");
         }
 
-        if (createdId) {
-          state.syncId = createdId;
-          localStorage.setItem("tecnomas_sync_id", createdId);
+        if (fullPath) {
+          state.syncId = fullPath;
+          localStorage.setItem("tecnomas_sync_id", fullPath);
           updateSyncDisplay();
           showToast("¡Nuevo Sync ID generado y guardado!");
         } else {
@@ -684,7 +676,7 @@
         }
 
       } catch (err) {
-        console.error("Cloud error:", err);
+        console.error("Cloud save error:", err);
         alert("Error al guardar en la nube: " + err.message);
       }
     }
@@ -695,16 +687,27 @@
     }
 
     async function confirmLoadFromCloud() {
-      const inputId = document.getElementById("inputSyncId").value.trim();
+      let inputId = document.getElementById("inputSyncId").value.trim();
       if (!inputId) {
         alert("Por favor ingresa un Sync ID válido.");
         return;
       }
 
-      showToast("Cargando datos...");
+      // Si el usuario pega la URL entera por error, nos quedamos solo con la ruta del ID
+      if (inputId.includes("jsonstorage.net/v1/json/")) {
+        inputId = inputId.split("jsonstorage.net/v1/json/")[1];
+      }
+
+      showToast("Cargando datos de la nube...");
+
       try {
-        const response = await fetch(`https://api.jsonstorage.net/v1/json/${inputId}?apiKey=${JSONSTORAGE_API_KEY}`);
+        // Intenta obtener primero mediante pública y luego con apiKey si requiere auth
+        let response = await fetch(`https://api.jsonstorage.net/v1/json/${inputId}`);
         
+        if (!response.ok) {
+          response = await fetch(`https://api.jsonstorage.net/v1/json/${inputId}?apiKey=${JSONSTORAGE_API_KEY}`);
+        }
+
         if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
         
         const data = await response.json();
@@ -728,7 +731,7 @@
         }
       } catch (err) {
         console.error("Load cloud error:", err);
-        alert("Error al cargar datos. Verifica que el Sync ID sea correcto.");
+        alert("Error al cargar datos. Asegúrate de presionar 'Guardar en Nube' primero en el dispositivo principal para obtener el Sync ID completo.");
       }
     }
 
@@ -741,7 +744,7 @@
       showToast("¡Sync ID copiado!");
     }
 
-    // --- Renderizado de UI ---
+    // --- UI Render ---
 
     function renderCategoryTabs() {
       const container = document.getElementById("categoryTabs");
