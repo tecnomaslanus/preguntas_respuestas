@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TECNOMAS - Respuestas Rápidas</title>
+    <title>TECNOMAS - Respuestas Rápidas (Online Cloud)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Oswald & Montserrat -->
@@ -20,15 +20,15 @@
                 extend: {
                     colors: {
                         tecnomas: {
-                            yellow: '#ffcb03',       // Color Principal (Amarillo)
+                            yellow: '#ffcb03',       // Primary Brand Yellow
                             yellowHover: '#e0b300',
-                            purpleDark: '#5d2783',   // Principal más oscuro (Púrpura)
-                            purpleDeep: '#3a1854',   // Púrpura profundo
-                            bgDark: '#120b18',       // Fondo principal
-                            cardBg: '#1b1224',       // Fondo tarjetas
-                            cardHover: '#251932',
-                            border: '#332046',
-                            muted: '#9a8ca8'
+                            purpleDark: '#5d2783',   // Primary Dark Purple
+                            purpleDeep: '#3c1857',   // Deep Purple accent
+                            bgDark: '#121216',       // Dark background
+                            cardBg: '#1a1a24',       // Card background
+                            cardHover: '#232332',    // Card hover state
+                            border: '#322d4a',       // Border line
+                            muted: '#a39bb8'         // Subdued text color
                         }
                     },
                     fontFamily: {
@@ -41,9 +41,8 @@
     </script>
 
     <style>
-        /* Custom Styling & High Precision Theme Colors */
         body {
-            background-color: #120b18;
+            background-color: #121216;
             color: #f3effa;
             font-family: 'Montserrat', sans-serif;
         }
@@ -59,22 +58,21 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #120b18;
+            background: #121216;
         }
         ::-webkit-scrollbar-thumb {
-            background: #332046;
+            background: #322d4a;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #ffcb03;
         }
 
-        /* Glow & Highlight effects */
         .yellow-glow {
-            box-shadow: 0 0 20px rgba(255, 203, 3, 0.2);
+            box-shadow: 0 0 18px rgba(255, 203, 3, 0.25);
         }
         .purple-glow {
-            box-shadow: 0 0 20px rgba(93, 39, 131, 0.35);
+            box-shadow: 0 0 18px rgba(93, 39, 131, 0.35);
         }
         .custom-scrollbar::-webkit-scrollbar {
             height: 5px;
@@ -83,8 +81,8 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-[#ffcb03] selection:text-slate-950">
 
-    <!-- HEADER / NAVBAR -->
-    <header class="sticky top-0 z-30 bg-[#120b18]/90 backdrop-blur-md border-b border-tecnomas-border px-4 lg:px-8 py-3.5">
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-30 bg-[#121216]/95 backdrop-blur-md border-b border-tecnomas-border px-4 lg:px-8 py-3.5">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
             <!-- Brand Logo -->
             <div class="flex items-center gap-3">
@@ -93,15 +91,22 @@
                 </div>
                 <div>
                     <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-wider text-white flex items-center gap-2 uppercase">
-                        TECNOMAS <span class="text-xs px-2.5 py-0.5 rounded-full bg-tecnomas-yellow/15 text-tecnomas-yellow border border-tecnomas-yellow/30 font-sans font-semibold tracking-normal lowercase">respuestas rápidas</span>
+                        TECNOMAS <span class="text-xs px-2.5 py-0.5 rounded-full bg-tecnomas-yellow/15 text-tecnomas-yellow border border-tecnomas-yellow/30 font-sans font-semibold tracking-normal lowercase">modo online</span>
                     </h1>
-                    <p class="text-xs text-tecnomas-muted font-medium">Panel de Atención al Cliente y Plantillas</p>
+                    <p class="text-xs text-tecnomas-muted font-medium">Base de Datos Centralizada en la Nube</p>
                 </div>
             </div>
 
-            <!-- Import / Export Actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-                <button onclick="exportConfig()" title="Descargar copia de seguridad en TXT" class="px-3.5 py-2 bg-tecnomas-cardBg hover:bg-tecnomas-cardHover text-slate-200 text-xs font-semibold rounded-xl border border-tecnomas-border transition flex items-center gap-2">
+            <!-- Top Actions -->
+            <div class="flex items-center gap-3 flex-wrap">
+                <!-- Online Status Badge (Clean & Non-Editable) -->
+                <div id="syncBadge" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                    <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="syncStatusText">🟢 En Línea / Sincronizado</span>
+                </div>
+
+                <!-- Backup TXT buttons -->
+                <button onclick="exportConfig()" title="Descargar archivo de respaldo en TXT" class="px-3.5 py-2 bg-tecnomas-cardBg hover:bg-tecnomas-cardHover text-slate-200 text-xs font-semibold rounded-xl border border-tecnomas-border transition flex items-center gap-2">
                     <i class="fa-solid fa-download text-tecnomas-yellow"></i>
                     <span class="hidden sm:inline">Exportar TXT</span>
                 </button>
@@ -112,6 +117,7 @@
                     <input type="file" id="importFileInput" accept=".txt,.json" class="hidden" onchange="importConfig(event)">
                 </label>
 
+                <!-- Create New Question Button -->
                 <button onclick="openQuestionModal()" class="px-4 py-2 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep text-xs sm:text-sm font-display font-bold uppercase tracking-wider rounded-xl shadow-lg yellow-glow transition flex items-center gap-2">
                     <i class="fa-solid fa-plus text-sm"></i>
                     <span>Nueva Respuesta</span>
@@ -125,10 +131,10 @@
 
         <!-- SEARCH AND CATEGORY MANAGEMENT BAR -->
         <div class="mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            <!-- Search bar -->
+            <!-- Search input -->
             <div class="relative flex-1">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-tecnomas-muted"></i>
-                <input type="text" id="searchInput" oninput="renderQuestions()" placeholder="Buscar respuesta por palabras clave (ej: garantía, precio, envío, pago)..." 
+                <input type="text" id="searchInput" oninput="renderQuestions()" placeholder="Buscar respuesta por palabra clave (ej: garantía, tarjeta, envío, local)..." 
                     class="w-full pl-11 pr-10 py-3 bg-tecnomas-cardBg border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow transition">
                 <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-tecnomas-muted hover:text-white">
                     <i class="fa-solid fa-xmark"></i>
@@ -142,16 +148,16 @@
             </button>
         </div>
 
-        <!-- CATEGORIES BAR (TABS) -->
+        <!-- CATEGORIES TABS -->
         <div class="mb-6 border-b border-tecnomas-border pb-3">
             <div class="flex items-center gap-2.5 overflow-x-auto pb-2 custom-scrollbar" id="categoriesTabContainer">
-                <!-- Tabs rendered dynamically -->
+                <!-- Dynamic Tabs -->
             </div>
         </div>
 
         <!-- QUESTIONS GRID SECTION -->
         <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <!-- Question Cards rendered dynamically -->
+            <!-- Dynamic Answer Cards -->
         </div>
 
         <!-- EMPTY STATE -->
@@ -160,33 +166,20 @@
                 <i class="fa-solid fa-folder-open"></i>
             </div>
             <h3 class="font-display text-xl font-bold text-white mb-1 uppercase tracking-wide">Sin resultados encontrados</h3>
-            <p class="text-xs text-tecnomas-muted max-w-md mx-auto mb-6">No hay respuestas cargadas para este filtro o búsqueda. Agrega una nueva o ajusta el criterio de búsqueda.</p>
+            <p class="text-xs text-tecnomas-muted max-w-md mx-auto mb-6">No hay respuestas disponibles para este filtro o búsqueda. Crea una nueva respuesta para comenzar.</p>
             <button onclick="openQuestionModal()" class="px-4 py-2 bg-tecnomas-yellow text-tecnomas-purpleDeep rounded-xl font-display font-bold text-xs uppercase tracking-wider hover:bg-tecnomas-yellowHover transition">
                 <i class="fa-solid fa-plus mr-1.5"></i> Crear Respuesta
             </button>
         </div>
 
-        <!-- TECHNICAL NOTICE REGARDING HOSTING / GOOGLE SITES -->
-        <div class="mt-12 p-4 rounded-2xl bg-tecnomas-cardBg/80 border border-tecnomas-border/80 flex flex-col sm:flex-row items-start sm:items-center gap-3.5 text-xs text-tecnomas-muted">
-            <div class="p-2.5 bg-tecnomas-purpleDark/40 rounded-xl border border-tecnomas-border text-tecnomas-yellow shrink-0">
-                <i class="fa-solid fa-circle-info text-base"></i>
-            </div>
-            <div class="space-y-1">
-                <p class="font-semibold text-slate-200 font-display uppercase tracking-wider">¿Cómo utilizar esta aplicación?</p>
-                <p class="leading-relaxed">
-                    Usa este archivo abriéndolo directamente en tu navegador (<strong class="text-white">página local</strong>) o súbelo de forma gratuita a <strong class="text-white">Netlify</strong> / <strong class="text-white">GitHub Pages</strong>. Google Sites bloquea la eliminación y guardado por sus políticas de seguridad en marcos incrustados (iframes).
-                </p>
-            </div>
-        </div>
-
     </main>
 
     <!-- FOOTER -->
-    <footer class="border-t border-tecnomas-border/60 py-4 px-4 text-center text-xs text-tecnomas-muted bg-[#0c0710]">
-        <p><strong class="text-tecnomas-yellow font-display uppercase tracking-wider">TECNOMAS</strong> &copy; Panel de Control de Respuestas Rápidas | Todos los datos se guardan en tu navegador o archivo TXT local.</p>
+    <footer class="border-t border-tecnomas-border/60 py-4 px-4 text-center text-xs text-tecnomas-muted bg-[#0e0e12]">
+        <p><strong class="text-tecnomas-yellow font-display uppercase tracking-wider">TECNOMAS</strong> &copy; Respuestas Rápidas | Sistema Online de Gestión de Atención al Cliente</p>
     </footer>
 
-    <!-- TOASTER / NOTIFICATION -->
+    <!-- TOASTER NOTIFICATION -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-5 py-3.5 bg-tecnomas-purpleDark border border-tecnomas-yellow text-white text-xs font-semibold rounded-xl shadow-2xl purple-glow">
         <div class="w-7 h-7 rounded-lg bg-tecnomas-yellow text-tecnomas-purpleDeep flex items-center justify-center font-bold">
             <i class="fa-solid fa-check" id="toastIcon"></i>
@@ -194,14 +187,14 @@
         <span id="toastMessage" class="font-medium">Respuesta copiada al portapapeles</span>
     </div>
 
-    <!-- MODAL: ELIMINAR CONFIRMACIÓN -->
+    <!-- MODAL: CONFIRM DELETE QUESTION -->
     <div id="deleteModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center">
             <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-rose-500/30">
                 <i class="fa-solid fa-trash-can"></i>
             </div>
             <h3 class="font-display text-xl font-bold text-white uppercase tracking-wider mb-2">¿Eliminar Respuesta?</h3>
-            <p class="text-xs text-tecnomas-muted mb-6 leading-relaxed">Esta acción borrará la plantilla de respuesta seleccionada. Podrás volver a agregarla en cualquier momento.</p>
+            <p class="text-xs text-tecnomas-muted mb-6 leading-relaxed">Esta acción eliminará la respuesta de la nube de forma permanente para todos los dispositivos.</p>
             <input type="hidden" id="deleteTargetId">
             <div class="flex gap-3 justify-center">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 bg-tecnomas-purpleDark/50 hover:bg-tecnomas-purpleDark text-slate-300 text-xs font-semibold rounded-xl transition">
@@ -214,7 +207,7 @@
         </div>
     </div>
 
-    <!-- MODAL: AGREGAR / EDITAR PREGUNTA -->
+    <!-- MODAL: ADD / EDIT QUESTION -->
     <div id="questionModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform transition-all">
             <div class="px-6 py-4 border-b border-tecnomas-border flex justify-between items-center bg-tecnomas-purpleDeep/60">
@@ -230,22 +223,22 @@
                 <input type="hidden" id="questionId">
 
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Título / Identificador de la Pregunta</label>
-                    <input type="text" id="questionTitle" required placeholder="Ej: Medios de Pago y Descuento en Efectivo" 
-                        class="w-full px-3.5 py-2.5 bg-[#120b18] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Título / Pregunta Predeterminada</label>
+                    <input type="text" id="questionTitle" required placeholder="Ej: Medios de pago y cuotas" 
+                        class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Categoría de Producto</label>
-                    <select id="questionCategory" required class="w-full px-3.5 py-2.5 bg-[#120b18] border border-tecnomas-border rounded-xl text-sm text-slate-100 focus:outline-none focus:border-tecnomas-yellow">
-                        <!-- Categories dynamically loaded -->
+                    <select id="questionCategory" required class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 focus:outline-none focus:border-tecnomas-yellow">
+                        <!-- Dynamic Categories -->
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Texto de la Respuesta (Se copiará al hacer clic)</label>
-                    <textarea id="questionAnswer" required rows="6" placeholder="Escribe el mensaje completo para el cliente..." 
-                        class="w-full px-3.5 py-2.5 bg-[#120b18] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow leading-relaxed"></textarea>
+                    <textarea id="questionAnswer" required rows="6" placeholder="Escribe la respuesta guardada para tus clientes..." 
+                        class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow leading-relaxed"></textarea>
                 </div>
 
                 <div class="pt-2 flex justify-end gap-3">
@@ -253,14 +246,14 @@
                         Cancelar
                     </button>
                     <button type="submit" class="px-5 py-2.5 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold uppercase tracking-wider text-xs rounded-xl shadow-md transition">
-                        Guardar Respuesta
+                        Guardar en la Nube
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: GESTIONAR CATEGORÍAS -->
+    <!-- MODAL: MANAGE CATEGORIES -->
     <div id="categoryModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="px-6 py-4 border-b border-tecnomas-border flex justify-between items-center bg-tecnomas-purpleDeep/60">
@@ -275,20 +268,20 @@
             <div class="p-6 space-y-5">
                 <!-- Add category form -->
                 <form onsubmit="addCategory(event)" class="flex gap-2">
-                    <input type="text" id="newCategoryName" required placeholder="Nombre de categoría..." 
-                        class="flex-1 px-3.5 py-2 bg-[#120b18] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow">
+                    <input type="text" id="newCategoryName" required placeholder="Nueva categoría..." 
+                        class="flex-1 px-3.5 py-2 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow">
                     <button type="submit" class="px-4 py-2 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold uppercase tracking-wider text-xs rounded-xl transition flex items-center gap-1">
                         <i class="fa-solid fa-plus"></i> Añadir
                     </button>
                 </form>
 
-                <!-- List of existing categories -->
+                <!-- List of categories -->
                 <div class="space-y-2 max-h-60 overflow-y-auto pr-1" id="categoriesManageList">
-                    <!-- Dynamic List -->
+                    <!-- Dynamic Category Item List -->
                 </div>
             </div>
 
-            <div class="px-6 py-3 bg-[#120b18] border-t border-tecnomas-border flex justify-end">
+            <div class="px-6 py-3 bg-[#121216] border-t border-tecnomas-border flex justify-end">
                 <button onclick="closeCategoryModal()" class="px-4 py-2 bg-tecnomas-purpleDark hover:bg-tecnomas-purpleDark/80 text-white text-xs font-semibold rounded-xl transition">
                     Cerrar
                 </button>
@@ -296,54 +289,59 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT LOGIC - STRICT ONLINE CLOUD DATABASE ENGINE -->
     <script>
-        // --- INITIAL DEFAULT DATA FOR TECNOMAS ---
-        const DEFAULT_CATEGORIES = [
-            "Juegos / Consolas",
-            "Servicio Técnico",
-            "Accesorios",
-            "Envíos y Medios de Pago",
+        // --- IMMUTABLE ONLINE CLOUD CONFIGURATION ---
+        const API_KEY = "3ece9911-23ff-4eca-bb69-feaf41441344";
+        const CLOUD_BIN_ID = "tecnomas_respuestas_cloud_db";
+        const API_ENDPOINT = `https://api.jsonstorage.net/v1/json/${CLOUD_BIN_ID}?apiKey=${API_KEY}`;
+
+        // Initial Data for Tecnomas
+        const INITIAL_CATEGORIES = [
+            "Medios de Pago",
+            "Envíos y Entregas",
             "Garantías y Cambios",
+            "Servicio Técnico",
+            "Juegos y Consolas",
             "Hardware / PC"
         ];
 
-        const DEFAULT_QUESTIONS = [
+        const INITIAL_QUESTIONS = [
             {
-                id: "1",
-                category: "Envíos y Medios de Pago",
-                title: "Medios de Pago y Descuento Efectivo",
-                answer: "¡Hola! En TECNOMAS aceptamos efectivo, transferencia bancaria (con un 10% de descuento directo), Mercado Pago y tarjetas de crédito en cuotas. ¿Qué producto te gustaría abonar?"
+                id: "101",
+                category: "Medios de Pago",
+                title: "Medios de Pago y Descuentos",
+                answer: "¡Hola! En TECNOMAS aceptamos efectivo, transferencia bancaria (con un 10% de descuento automático), Mercado Pago y tarjetas de crédito en cuotas. ¿Qué producto te gustaría abonar?"
             },
             {
-                id: "2",
-                category: "Envíos y Medios de Pago",
-                title: "Envíos y Tiempos de Entrega",
-                answer: "¡Hola! Realizamos envíos en el día mediante motomensajería dentro de CABA y GBA. Para el resto del país enviamos a través de Correo Argentino / Andreani con código de seguimiento en vivo. ¿A qué localidad sería la entrega?"
+                id: "102",
+                category: "Envíos y Entregas",
+                title: "Envíos en el día y Correo",
+                answer: "¡Hola! Realizamos envíos en el día por motomensajería en CABA y GBA. Para el resto del país enviamos a través de Correo Argentino / Andreani con código de seguimiento en vivo. ¿A qué localidad sería la entrega?"
             },
             {
-                id: "3",
+                id: "103",
                 category: "Garantías y Cambios",
-                title: "Política de Garantía Oficial",
-                answer: "¡Hola! Todos nuestros productos cuentan con garantía oficial de TECNOMAS. Entregamos factura de compra digital y respaldo ante cualquier falla técnica. Conservá el empaque original para cualquier cambio."
+                title: "Garantía Oficial Tecnomas",
+                answer: "¡Hola! Todos nuestros productos cuentan con garantía oficial de TECNOMAS. Entregamos factura digital y respaldo ante cualquier falla técnica. Conservá la caja y empaque original."
             },
             {
-                id: "4",
+                id: "104",
                 category: "Servicio Técnico",
-                title: "Limpieza y Mantenimiento de Consolas / PC",
-                answer: "¡Hola! El servicio técnico incluye limpieza profunda de disipadores y ventiladores, cambio de pasta térmica de alto rendimiento y prueba de estrés. Demora estimada: 24 a 48 hs. Podés acercar tu equipo a nuestro local cuando gustes."
+                title: "Mantenimiento Preventivo de Consolas / PC",
+                answer: "¡Hola! El servicio técnico incluye limpieza profunda de ventiladores, reemplazo de pasta térmica de alta conductividad y prueba de rendimiento. Demora estimada: 24 a 48 hs. Podés traer tu equipo a nuestro local sin turno previo."
             },
             {
-                id: "5",
-                category: "Juegos / Consolas",
-                title: "Disponibilidad de Juegos / Stock",
-                answer: "¡Hola! Sí, contamos con stock disponible para retiro inmediato por nuestro local o para despacho por envío. ¡Avisanos y te lo reservamos!"
+                id: "105",
+                category: "Juegos y Consolas",
+                title: "Disponibilidad de Juegos y Accesorios",
+                answer: "¡Hola! Sí, tenemos stock disponible para retiro inmediato en nuestro local o para envío en el día. Si querés te lo reservamos a tu nombre."
             },
             {
-                id: "6",
+                id: "106",
                 category: "Hardware / PC",
-                title: "Presupuesto PC Gamer a Medida",
-                answer: "¡Hola! En TECNOMAS armamos computadoras personalizadas según tus necesidades y presupuesto. Comentanos qué juegos o programas querés usar y te armamos la mejor propuesta."
+                title: "Presupuesto de PC Gamer a Medida",
+                answer: "¡Hola! En TECNOMAS diseñamos y armamos computadoras a medida según tus necesidades y presupuesto. Comentanos qué juegos o programas querés usar y te cotizamos el mejor combo."
             }
         ];
 
@@ -352,60 +350,117 @@
         let questions = [];
         let currentCategory = "Todas";
 
-        // --- INITIALIZATION ---
+        // --- APPLICATION LAUNCH ---
         window.onload = function() {
-            loadData();
-            renderCategoriesTab();
-            renderQuestions();
+            loadCloudData();
         };
 
-        // --- LOCAL STORAGE HELPERS ---
-        function loadData() {
-            const savedCats = localStorage.getItem("tecnomas_categories_v2");
-            const savedQuests = localStorage.getItem("tecnomas_questions_v2");
+        // --- CLOUD SYNC ENGINE (ONLINE PURA) ---
 
-            if (savedCats) {
-                try {
-                    categories = JSON.parse(savedCats);
-                } catch(e) {
-                    categories = [...DEFAULT_CATEGORIES];
-                }
-            } else {
-                categories = [...DEFAULT_CATEGORIES];
-                saveCategories();
-            }
-
-            if (savedQuests) {
-                try {
-                    questions = JSON.parse(savedQuests);
-                } catch(e) {
-                    questions = [...DEFAULT_QUESTIONS];
-                }
-            } else {
-                questions = [...DEFAULT_QUESTIONS];
-                saveQuestions();
-            }
-        }
-
-        function saveCategories() {
+        async function loadCloudData() {
+            updateStatusBadge("loading", "Cargando desde la Nube...");
             try {
-                localStorage.setItem("tecnomas_categories_v2", JSON.stringify(categories));
-            } catch(e) {
-                console.warn("Storage restricted", e);
+                const response = await fetch(API_ENDPOINT);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && Array.isArray(data.categories) && Array.isArray(data.questions)) {
+                        categories = data.categories;
+                        questions = data.questions;
+                        updateStatusBadge("online", "🟢 En Línea / Sincronizado");
+                    } else {
+                        await initializeCloudBin();
+                    }
+                } else if (response.status === 404) {
+                    await initializeCloudBin();
+                } else {
+                    updateStatusBadge("error", "🔴 Error de Conexión Nube");
+                }
+            } catch (error) {
+                console.error("Error al conectar con la base de datos en la nube:", error);
+                updateStatusBadge("error", "🔴 Sin Conexión Online");
             }
+
+            renderCategoriesTab();
+            renderQuestions();
         }
 
-        function saveQuestions() {
+        async function initializeCloudBin() {
+            categories = [...INITIAL_CATEGORIES];
+            questions = [...INITIAL_QUESTIONS];
+
+            const payload = {
+                appName: "Tecnomas Respuestas Rapidas",
+                updatedAt: new Date().toISOString(),
+                categories: categories,
+                questions: questions
+            };
+
             try {
-                localStorage.setItem("tecnomas_questions_v2", JSON.stringify(questions));
-            } catch(e) {
-                console.warn("Storage restricted", e);
+                const response = await fetch(API_ENDPOINT, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    updateStatusBadge("online", "🟢 En Línea / Sincronizado");
+                } else {
+                    updateStatusBadge("error", "🔴 Error al inicializar Nube");
+                }
+            } catch (err) {
+                updateStatusBadge("error", "🔴 Error de Red");
             }
         }
 
-        // --- RENDER FUNCTIONS ---
+        async function syncToCloud() {
+            updateStatusBadge("loading", "Sincronizando Nube...");
 
-        // Render Tabs for Categories
+            const payload = {
+                appName: "Tecnomas Respuestas Rapidas",
+                updatedAt: new Date().toISOString(),
+                categories: categories,
+                questions: questions
+            };
+
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    updateStatusBadge("online", "🟢 En Línea / Sincronizado");
+                } else {
+                    updateStatusBadge("error", "🔴 Error al guardar cambios");
+                }
+            } catch (err) {
+                console.error("Sincronización fallida:", err);
+                updateStatusBadge("error", "🔴 Sin Conexión a la Nube");
+            }
+        }
+
+        function updateStatusBadge(state, message) {
+            const badge = document.getElementById("syncBadge");
+            const dot = document.getElementById("syncDot");
+            const statusText = document.getElementById("syncStatusText");
+
+            statusText.innerText = message;
+
+            if (state === "online") {
+                badge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold";
+                dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+            } else if (state === "loading") {
+                badge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-semibold";
+                dot.className = "w-2.5 h-2.5 rounded-full bg-amber-300 animate-spin";
+            } else {
+                badge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-semibold";
+                dot.className = "w-2.5 h-2.5 rounded-full bg-rose-400";
+            }
+        }
+
+        // --- RENDER LOGIC ---
+
         function renderCategoriesTab() {
             const container = document.getElementById("categoriesTabContainer");
             let html = `
@@ -427,14 +482,12 @@
             container.innerHTML = html;
         }
 
-        // Filter active category
         function filterCategory(cat) {
             currentCategory = cat;
             renderCategoriesTab();
             renderQuestions();
         }
 
-        // Render Questions Grid
         function renderQuestions() {
             const container = document.getElementById("questionsContainer");
             const emptyState = document.getElementById("emptyState");
@@ -443,7 +496,6 @@
 
             clearBtn.classList.toggle("hidden", searchQuery === "");
 
-            // Filter logic
             const filtered = questions.filter(q => {
                 const matchesCategory = (currentCategory === "Todas" || q.category === currentCategory);
                 const matchesSearch = q.title.toLowerCase().includes(searchQuery) || 
@@ -465,31 +517,27 @@
                 html += `
                     <div class="bg-tecnomas-cardBg border border-tecnomas-border hover:border-tecnomas-purpleDark/80 rounded-2xl p-5 flex flex-col justify-between shadow-lg transition duration-200 hover:bg-tecnomas-cardHover">
                         <div>
-                            <!-- Header Info -->
                             <div class="flex items-start justify-between gap-2 mb-3">
                                 <span class="px-2.5 py-1 bg-tecnomas-purpleDark/40 border border-tecnomas-purpleDark text-amber-300 text-[10px] font-semibold tracking-wider rounded-lg uppercase">
                                     ${escapeHtml(q.category)}
                                 </span>
                                 <div class="flex items-center gap-1">
-                                    <button onclick="editQuestion('${q.id}')" title="Editar" class="w-7 h-7 rounded-lg bg-[#120b18] hover:bg-tecnomas-purpleDark text-tecnomas-muted hover:text-white transition flex items-center justify-center text-xs">
+                                    <button onclick="editQuestion('${q.id}')" title="Editar" class="w-7 h-7 rounded-lg bg-[#121216] hover:bg-tecnomas-purpleDark text-tecnomas-muted hover:text-white transition flex items-center justify-center text-xs">
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
-                                    <button onclick="openDeleteModal('${q.id}')" title="Eliminar" class="w-7 h-7 rounded-lg bg-[#120b18] hover:bg-rose-950/80 text-tecnomas-muted hover:text-rose-400 transition flex items-center justify-center text-xs">
+                                    <button onclick="openDeleteModal('${q.id}')" title="Eliminar" class="w-7 h-7 rounded-lg bg-[#121216] hover:bg-rose-950/80 text-tecnomas-muted hover:text-rose-400 transition flex items-center justify-center text-xs">
                                         <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Title -->
                             <h3 class="font-display text-lg font-bold text-white mb-2 leading-snug tracking-wide">${escapeHtml(q.title)}</h3>
 
-                            <!-- Answer text preview -->
-                            <div class="p-3.5 bg-[#120b18] border border-tecnomas-border/80 rounded-xl text-xs text-slate-200 whitespace-pre-wrap leading-relaxed mb-4 max-h-48 overflow-y-auto">
+                            <div class="p-3.5 bg-[#121216] border border-tecnomas-border/80 rounded-xl text-xs text-slate-200 whitespace-pre-wrap leading-relaxed mb-4 max-h-48 overflow-y-auto">
                                 ${escapeHtml(q.answer)}
                             </div>
                         </div>
 
-                        <!-- Copy Button -->
                         <button id="btn-copy-${q.id}" onclick="copyAnswer('${q.id}')" class="w-full py-2.5 px-4 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition duration-150 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-copy text-sm"></i>
                             <span>Copiar Respuesta</span>
@@ -501,7 +549,8 @@
             container.innerHTML = html;
         }
 
-        // --- COPY TO CLIPBOARD ACTION ---
+        // --- CLIPBOARD ACTION ---
+
         function copyAnswer(id) {
             const question = questions.find(q => q.id === id);
             if (!question) return;
@@ -511,7 +560,7 @@
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     triggerCopyFeedback(id);
-                }).catch(err => {
+                }).catch(() => {
                     execCommandCopy(textToCopy, id);
                 });
             } else {
@@ -519,7 +568,7 @@
             }
         }
 
-        function execCommandCopy(text, id) {
+        function execCommandCopy(text, id = null) {
             const textarea = document.createElement("textarea");
             textarea.value = text;
             textarea.style.position = "fixed";
@@ -528,7 +577,7 @@
             textarea.select();
             try {
                 document.execCommand('copy');
-                triggerCopyFeedback(id);
+                if (id) triggerCopyFeedback(id);
             } catch (err) {
                 showToast("Error al copiar texto", "error");
             }
@@ -539,24 +588,24 @@
             const btn = document.getElementById(`btn-copy-${id}`);
             if (btn) {
                 const originalContent = btn.innerHTML;
-                btn.className = "w-full py-2.5 px-4 bg-emerald-500 text-slate-950 font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition duration-150 flex items-center justify-center gap-2";
+                btn.className = "w-full py-2.5 px-4 bg-emerald-400 text-slate-950 font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition duration-150 flex items-center justify-center gap-2";
                 btn.innerHTML = `<i class="fa-solid fa-check text-sm"></i> <span>¡Copiado!</span>`;
 
                 setTimeout(() => {
                     btn.className = "w-full py-2.5 px-4 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition duration-150 flex items-center justify-center gap-2";
                     btn.innerHTML = originalContent;
-                }, 1500);
+                }, 1800);
             }
             showToast("¡Respuesta copiada al portapapeles!");
         }
 
-        // --- SEARCH CLEAR ---
         function clearSearch() {
             document.getElementById("searchInput").value = "";
             renderQuestions();
         }
 
-        // --- DELETE QUESTION MODAL & LOGIC ---
+        // --- QUESTIONS CRUD ---
+
         function openDeleteModal(id) {
             document.getElementById("deleteTargetId").value = id;
             document.getElementById("deleteModal").classList.remove("hidden");
@@ -570,15 +619,14 @@
             const id = document.getElementById("deleteTargetId").value;
             if (id) {
                 questions = questions.filter(q => q.id !== id);
-                saveQuestions();
+                syncToCloud();
                 renderCategoriesTab();
                 renderQuestions();
-                showToast("Respuesta eliminada correctamente");
+                showToast("Respuesta eliminada de la nube");
             }
             closeDeleteModal();
         }
 
-        // --- QUESTION MODAL & CRUD ---
         function openQuestionModal(editId = null) {
             const modal = document.getElementById("questionModal");
             const selectCat = document.getElementById("questionCategory");
@@ -622,7 +670,7 @@
                 if (index !== -1) {
                     questions[index] = { id, title, category, answer };
                 }
-                showToast("Respuesta actualizada correctamente");
+                showToast("Respuesta actualizada");
             } else {
                 const newQ = {
                     id: Date.now().toString(),
@@ -631,10 +679,10 @@
                     answer
                 };
                 questions.unshift(newQ);
-                showToast("Nueva respuesta guardada");
+                showToast("Nueva respuesta guardada en la nube");
             }
 
-            saveQuestions();
+            syncToCloud();
             renderCategoriesTab();
             renderQuestions();
             closeQuestionModal();
@@ -644,7 +692,8 @@
             openQuestionModal(id);
         }
 
-        // --- CATEGORY MODAL & CRUD ---
+        // --- CATEGORIES CRUD ---
+
         function openCategoryModal() {
             renderManageCategoriesList();
             document.getElementById("categoryModal").classList.remove("hidden");
@@ -661,7 +710,7 @@
             categories.forEach((cat, index) => {
                 const count = questions.filter(q => q.category === cat).length;
                 html += `
-                    <div class="flex items-center justify-between p-3 bg-[#120b18] border border-tecnomas-border rounded-xl">
+                    <div class="flex items-center justify-between p-3 bg-[#121216] border border-tecnomas-border rounded-xl">
                         <span class="text-xs font-semibold text-slate-200">${escapeHtml(cat)} <span class="text-tecnomas-muted">(${count})</span></span>
                         <button onclick="deleteCategory(${index})" class="text-tecnomas-muted hover:text-rose-400 p-1 transition">
                             <i class="fa-solid fa-trash-can text-xs"></i>
@@ -680,7 +729,7 @@
 
             if (val && !categories.includes(val)) {
                 categories.push(val);
-                saveCategories();
+                syncToCloud();
                 renderManageCategoriesList();
                 renderCategoriesTab();
                 input.value = "";
@@ -693,12 +742,12 @@
             const hasQuestions = questions.some(q => q.category === catName);
 
             if (hasQuestions) {
-                showToast(`No podés eliminar "${catName}" porque tiene respuestas activas.`, "error");
+                showToast(`No puedes eliminar "${catName}" porque tiene respuestas asociadas.`, "error");
                 return;
             }
 
             categories.splice(index, 1);
-            saveCategories();
+            syncToCloud();
             renderManageCategoriesList();
             renderCategoriesTab();
             if (currentCategory === catName) {
@@ -708,10 +757,11 @@
             showToast("Categoría eliminada");
         }
 
-        // --- EXPORT / IMPORT BACKUP CONFIG (.TXT / .JSON) ---
+        // --- EXPORT / IMPORT FILE BACKUPS ---
+
         function exportConfig() {
             const backupData = {
-                appName: "TECNOMAS Respuestas Rapidas",
+                appName: "TECNOMAS Respuestas Rapidas (Online)",
                 exportDate: new Date().toISOString(),
                 categories: categories,
                 questions: questions
@@ -722,12 +772,12 @@
             downloadAnchor.setAttribute("href", dataStr);
             
             const dateStr = new Date().toISOString().slice(0,10);
-            downloadAnchor.setAttribute("download", `Tecnomas_Respuestas_Config_${dateStr}.txt`);
+            downloadAnchor.setAttribute("download", `Tecnomas_Respuestas_${dateStr}.txt`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
 
-            showToast("Configuración guardada en archivo TXT");
+            showToast("Backup guardado en archivo TXT");
         }
 
         function importConfig(event) {
@@ -743,26 +793,25 @@
                         categories = data.categories;
                         questions = data.questions;
 
-                        saveCategories();
-                        saveQuestions();
-
+                        syncToCloud();
                         currentCategory = "Todas";
                         renderCategoriesTab();
                         renderQuestions();
 
-                        showToast("¡Configuración importada con éxito!");
+                        showToast("¡Respuestas e información restauradas!");
                     } else {
-                        showToast("Formato de archivo inválido", "error");
+                        showToast("Formato de archivo no válido", "error");
                     }
                 } catch (err) {
-                    showToast("Error al leer el archivo de respaldo", "error");
+                    showToast("Error al importar archivo", "error");
                 }
             };
             reader.readAsText(file);
             event.target.value = "";
         }
 
-        // --- TOASTER NOTIFICATION ---
+        // --- TOASTER ---
+
         function showToast(message, type = "success") {
             const toast = document.getElementById("toast");
             const msg = document.getElementById("toastMessage");
@@ -785,6 +834,7 @@
         }
 
         // --- UTILS ---
+
         function escapeHtml(text) {
             if (!text) return "";
             return text
