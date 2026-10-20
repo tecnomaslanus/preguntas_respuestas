@@ -1,975 +1,961 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TECNOMAS - Respuestas Rápidas (Sync Cloud)</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Oswald & Montserrat -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        tecnomas: {
-                            yellow: '#ffcb03',       // Primary Brand Yellow
-                            yellowHover: '#e0b300',
-                            purpleDark: '#5d2783',   // Primary Dark Purple
-                            purpleDeep: '#3c1857',   // Deep Purple accent
-                            bgDark: '#121216',       // Dark background
-                            cardBg: '#1a1a24',       // Card background
-                            cardHover: '#232332',    // Card hover state
-                            border: '#322d4a',       // Border line
-                            muted: '#a39bb8'         // Subdued text color
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Montserrat', 'sans-serif'],
-                        display: ['Oswald', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tecnomas - Respuestas Rápidas</title>
+  
+  <!-- Fuentes Google Fonts: Oswald y Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-yellow: #ffcb03;
+      --primary-purple: #5d2783;
+      --purple-hover: #4a1f6a;
+      --yellow-hover: #e0b300;
+      --bg-dark: #121216;
+      --card-bg: #1a1a22;
+      --input-bg: #242430;
+      --border-color: #2e2e3e;
+      --text-main: #f0f0f5;
+      --text-muted: #a0a0b2;
+      --font-title: 'Oswald', sans-serif;
+      --font-body: 'Montserrat', sans-serif;
+    }
 
-    <style>
-        body {
-            background-color: #121216;
-            color: #f3effa;
-            font-family: 'Montserrat', sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        h1, h2, h3, .font-display {
-            font-family: 'Oswald', sans-serif;
-            letter-spacing: 0.03em;
-        }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        /* Custom Scrollbars */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #121216;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #322d4a;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ffcb03;
-        }
+    .container {
+      width: 100%;
+      max-width: 1000px;
+    }
 
-        .yellow-glow {
-            box-shadow: 0 0 18px rgba(255, 203, 3, 0.25);
-        }
-        .purple-glow {
-            box-shadow: 0 0 18px rgba(93, 39, 131, 0.35);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 5px;
-        }
-    </style>
+    /* Header & Branding */
+    header {
+      background: linear-gradient(135deg, var(--card-bg) 0%, #15151c 100%);
+      border: 1px solid var(--border-color);
+      border-top: 4px solid var(--primary-yellow);
+      border-radius: 12px;
+      padding: 20px 25px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      background-color: var(--primary-yellow);
+      color: var(--primary-purple);
+      font-family: var(--font-title);
+      font-size: 24px;
+      font-weight: bold;
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-title);
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: var(--primary-yellow);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .brand-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Action Buttons Bar */
+    .sync-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .sync-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 250px;
+    }
+
+    .sync-id-box {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 13px;
+      color: var(--primary-yellow);
+      word-break: break-all;
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-yellow {
+      background-color: var(--primary-yellow);
+      color: #000;
+    }
+
+    .btn-yellow:hover {
+      background-color: var(--yellow-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-purple {
+      background-color: var(--primary-purple);
+      color: #fff;
+    }
+
+    .btn-purple:hover {
+      background-color: var(--purple-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--input-bg);
+      border-color: var(--text-muted);
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #bd2130;
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    /* Search & Controls */
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 280px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-yellow);
+    }
+
+    /* Category Tabs */
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-purple) var(--bg-dark);
+    }
+
+    .cat-tab {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .cat-tab.active {
+      background-color: var(--primary-purple);
+      color: #fff;
+      border-color: var(--primary-purple);
+    }
+
+    .cat-tab:hover:not(.active) {
+      border-color: var(--primary-yellow);
+      color: var(--text-main);
+    }
+
+    /* Response Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 203, 3, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-family: var(--font-title);
+      font-size: 18px;
+      color: var(--primary-yellow);
+      letter-spacing: 0.5px;
+    }
+
+    .card-tag {
+      background-color: rgba(93, 39, 131, 0.3);
+      color: #d1b3ff;
+      border: 1px solid rgba(93, 39, 131, 0.5);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .card-body {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-main);
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 6px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-top: 4px solid var(--primary-yellow);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 500px;
+      padding: 25px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal-title {
+      font-family: var(--font-title);
+      font-size: 22px;
+      color: var(--primary-yellow);
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .form-control {
+      width: 100%;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-yellow);
+    }
+
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--primary-yellow);
+      color: #000;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 2000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+      background: var(--card-bg);
+      border: 1px border-dashed var(--border-color);
+      border-radius: 10px;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-[#ffcb03] selection:text-slate-950">
+<body>
 
-    <!-- TOP HEADER -->
-    <header class="sticky top-0 z-30 bg-[#121216]/95 backdrop-blur-md border-b border-tecnomas-border px-4 lg:px-8 py-3.5">
-        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
-            <!-- Brand Logo -->
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-tecnomas-yellow to-amber-500 flex items-center justify-center text-tecnomas-purpleDeep font-display font-bold text-2xl shadow-lg yellow-glow">
-                    T
-                </div>
-                <div>
-                    <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-wider text-white flex items-center gap-2 uppercase">
-                        TECNOMAS <span class="text-xs px-2.5 py-0.5 rounded-full bg-tecnomas-yellow/15 text-tecnomas-yellow border border-tecnomas-yellow/30 font-sans font-semibold tracking-normal lowercase">sync cloud</span>
-                    </h1>
-                    <p class="text-xs text-tecnomas-muted font-medium">Respuestas Rápidas Multi-dispositivo</p>
-                </div>
-            </div>
-
-            <!-- Top Actions & Sync Controls -->
-            <div class="flex items-center gap-2.5 flex-wrap">
-                <!-- Sync Badge Info -->
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-tecnomas-cardBg border border-tecnomas-border">
-                    <div id="syncBadge" class="flex items-center gap-2 text-xs font-semibold text-emerald-400">
-                        <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                        <span id="syncStatusText">Listo</span>
-                    </div>
-                    <span class="text-tecnomas-border">|</span>
-                    <span id="syncIdDisplay" class="text-xs font-mono font-bold text-tecnomas-yellow max-w-[110px] truncate" title="Tu Sync ID Actual">Sin ID</span>
-                    <button onclick="copySyncId()" title="Copiar Sync ID" class="text-xs p-1 text-tecnomas-muted hover:text-white transition">
-                        <i class="fa-solid fa-copy"></i>
-                    </button>
-                </div>
-
-                <!-- Cloud Action Buttons -->
-                <button onclick="saveToCloudManual()" title="Guardar cambios actuales en la nube" class="px-3.5 py-2 bg-tecnomas-purpleDark hover:bg-tecnomas-purpleDark/80 text-white text-xs font-semibold rounded-xl border border-tecnomas-border transition flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-cloud-arrow-up text-tecnomas-yellow"></i>
-                    <span>Guardar en Nube</span>
-                </button>
-
-                <button onclick="openConnectModal()" title="Cargar datos usando un Sync ID de la nube" class="px-3.5 py-2 bg-tecnomas-cardBg hover:bg-tecnomas-cardHover text-slate-200 text-xs font-semibold rounded-xl border border-tecnomas-border transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-cloud-arrow-down text-sky-400"></i>
-                    <span>Cargar de Nube</span>
-                </button>
-
-                <!-- TXT Backup buttons -->
-                <button onclick="exportConfig()" title="Descargar archivo de respaldo en TXT" class="px-3 py-2 bg-tecnomas-cardBg hover:bg-tecnomas-cardHover text-slate-200 text-xs font-semibold rounded-xl border border-tecnomas-border transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-download text-tecnomas-yellow"></i>
-                    <span class="hidden md:inline">Exportar TXT</span>
-                </button>
-                
-                <label class="px-3 py-2 bg-tecnomas-cardBg hover:bg-tecnomas-cardHover text-slate-200 text-xs font-semibold rounded-xl border border-tecnomas-border transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-upload text-amber-300"></i>
-                    <span class="hidden md:inline">Importar TXT</span>
-                    <input type="file" id="importFileInput" accept=".txt,.json" class="hidden" onchange="importConfig(event)">
-                </label>
-
-                <!-- Create New Question Button -->
-                <button onclick="openQuestionModal()" class="px-4 py-2 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep text-xs sm:text-sm font-display font-bold uppercase tracking-wider rounded-xl shadow-lg yellow-glow transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus text-sm"></i>
-                    <span>Nueva Respuesta</span>
-                </button>
-            </div>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">T</div>
+        <div class="brand-text">
+          <h1>Tecnomas</h1>
+          <p>Respuestas Rápidas Atencion al Cliente</p>
         </div>
+      </div>
+      <div>
+        <button class="btn btn-yellow" onclick="openAddModal()">➕ Nueva Respuesta</button>
+      </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-1">
-
-        <!-- SEARCH AND CATEGORY MANAGEMENT BAR -->
-        <div class="mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            <!-- Search input -->
-            <div class="relative flex-1">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-tecnomas-muted"></i>
-                <input type="text" id="searchInput" oninput="renderQuestions()" placeholder="Buscar respuesta por palabra clave (ej: garantía, cuotas, envío, local)..." 
-                    class="w-full pl-11 pr-10 py-3 bg-tecnomas-cardBg border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow transition">
-                <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-tecnomas-muted hover:text-white">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Manage categories button -->
-            <button onclick="openCategoryModal()" class="px-4 py-3 bg-tecnomas-cardBg hover:bg-tecnomas-purpleDark border border-tecnomas-border text-slate-200 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 shadow-sm">
-                <i class="fa-solid fa-tags text-tecnomas-yellow"></i>
-                <span class="font-display uppercase tracking-wider text-sm">Editar Categorías</span>
-            </button>
-        </div>
-
-        <!-- CATEGORIES TABS -->
-        <div class="mb-6 border-b border-tecnomas-border pb-3">
-            <div class="flex items-center gap-2.5 overflow-x-auto pb-2 custom-scrollbar" id="categoriesTabContainer">
-                <!-- Dynamic Tabs -->
-            </div>
-        </div>
-
-        <!-- QUESTIONS GRID SECTION -->
-        <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <!-- Dynamic Answer Cards -->
-        </div>
-
-        <!-- EMPTY STATE -->
-        <div id="emptyState" class="hidden text-center py-16 px-4 bg-tecnomas-cardBg/50 rounded-2xl border border-dashed border-tecnomas-border my-8">
-            <div class="w-16 h-16 bg-tecnomas-purpleDark/50 rounded-full flex items-center justify-center mx-auto mb-4 text-tecnomas-yellow text-2xl border border-tecnomas-border">
-                <i class="fa-solid fa-folder-open"></i>
-            </div>
-            <h3 class="font-display text-xl font-bold text-white mb-1 uppercase tracking-wide">Sin resultados encontrados</h3>
-            <p class="text-xs text-tecnomas-muted max-w-md mx-auto mb-6">No hay respuestas disponibles para este filtro o búsqueda. Crea una nueva respuesta para comenzar.</p>
-            <button onclick="openQuestionModal()" class="px-4 py-2 bg-tecnomas-yellow text-tecnomas-purpleDeep rounded-xl font-display font-bold text-xs uppercase tracking-wider hover:bg-tecnomas-yellowHover transition">
-                <i class="fa-solid fa-plus mr-1.5"></i> Crear Respuesta
-            </button>
-        </div>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="border-t border-tecnomas-border/60 py-4 px-4 text-center text-xs text-tecnomas-muted bg-[#0e0e12]">
-        <p><strong class="text-tecnomas-yellow font-display uppercase tracking-wider">TECNOMAS</strong> &copy; Respuestas Rápidas | Sistema de Gestión de Atención al Cliente</p>
-    </footer>
-
-    <!-- TOASTER NOTIFICATION -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-5 py-3.5 bg-tecnomas-purpleDark border border-tecnomas-yellow text-white text-xs font-semibold rounded-xl shadow-2xl purple-glow">
-        <div class="w-7 h-7 rounded-lg bg-tecnomas-yellow text-tecnomas-purpleDeep flex items-center justify-center font-bold">
-            <i class="fa-solid fa-check" id="toastIcon"></i>
-        </div>
-        <span id="toastMessage" class="font-medium">Respuesta copiada al portapapeles</span>
+    <!-- Cloud Sync Controls -->
+    <div class="sync-bar">
+      <div class="sync-info">
+        <span>☁️ Sync ID:</span>
+        <div class="sync-id-box" id="syncIdDisplay">No generado</div>
+        <button class="btn btn-outline btn-sm" onclick="copySyncId()">📋 Copiar ID</button>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-yellow btn-sm" onclick="saveToCloud()">☁️ Guardar en Nube</button>
+        <button class="btn btn-purple btn-sm" onclick="loadFromCloud()">📥 Cargar de Nube</button>
+        <button class="btn btn-outline btn-sm" onclick="exportBackup()">💾 Backup TXT</button>
+      </div>
     </div>
 
-    <!-- MODAL: CONNECT / LOAD EXISTING SYNC ID -->
-    <div id="connectModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-display text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-down text-sky-400"></i> Cargar Datos de Nube
-                </h3>
-                <button onclick="closeConnectModal()" class="text-tecnomas-muted hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <p class="text-xs text-tecnomas-muted mb-4 leading-relaxed">
-                Ingresa el <strong>Sync ID</strong> (identificador bin) para descargar la base de datos guardada en la nube desde otro dispositivo.
-            </p>
-            <form onsubmit="connectExistingSyncId(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Sync ID (Bin ID)</label>
-                    <input type="text" id="inputConnectSyncId" required placeholder="Ej: 65a123f890123456..." 
-                        class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow font-mono">
-                </div>
-                <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeConnectModal()" class="px-4 py-2 bg-tecnomas-purpleDark/50 hover:bg-tecnomas-purpleDark text-slate-300 text-xs font-semibold rounded-xl transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-5 py-2.5 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold uppercase tracking-wider text-xs rounded-xl shadow-md transition">
-                        Descargar de la Nube
-                    </button>
-                </div>
-            </form>
-        </div>
+    <!-- Controls -->
+    <div class="controls">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar por palabra clave o título..." oninput="renderCards()">
+      <button class="btn btn-outline" onclick="openCategoriesModal()">🏷️ Categorías</button>
     </div>
 
-    <!-- MODAL: CONFIRM DELETE QUESTION -->
-    <div id="deleteModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center">
-            <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-rose-500/30">
-                <i class="fa-solid fa-trash-can"></i>
-            </div>
-            <h3 class="font-display text-xl font-bold text-white uppercase tracking-wider mb-2">¿Eliminar Respuesta?</h3>
-            <p class="text-xs text-tecnomas-muted mb-6 leading-relaxed">Esta acción eliminará la respuesta de tu dispositivo. Recuerda guardar en la nube para actualizar tus cambios.</p>
-            <input type="hidden" id="deleteTargetId">
-            <div class="flex gap-3 justify-center">
-                <button onclick="closeDeleteModal()" class="px-4 py-2 bg-tecnomas-purpleDark/50 hover:bg-tecnomas-purpleDark text-slate-300 text-xs font-semibold rounded-xl transition">
-                    Cancelar
-                </button>
-                <button onclick="confirmDeleteQuestion()" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-display font-bold uppercase tracking-wider text-xs rounded-xl shadow-md transition">
-                    Sí, Eliminar
-                </button>
-            </div>
+    <!-- Category Filter Tabs -->
+    <div class="categories-bar" id="categoryTabs"></div>
+
+    <!-- Cards Grid -->
+    <div class="cards-grid" id="cardsGrid"></div>
+  </div>
+
+  <!-- Modal: Agregar / Editar Respuesta -->
+  <div class="modal-overlay" id="responseModal">
+    <div class="modal">
+      <div class="modal-title" id="modalResponseTitle">Nueva Respuesta</div>
+      <form id="responseForm" onsubmit="handleSaveResponse(event)">
+        <input type="hidden" id="respId">
+        <div class="form-group">
+          <label>Título de la Respuesta</label>
+          <input type="text" id="respTitle" class="form-control" placeholder="Ej: Horarios de atención" required>
         </div>
-    </div>
-
-    <!-- MODAL: ADD / EDIT QUESTION -->
-    <div id="questionModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform transition-all">
-            <div class="px-6 py-4 border-b border-tecnomas-border flex justify-between items-center bg-tecnomas-purpleDeep/60">
-                <h3 id="modalTitle" class="font-display text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square text-tecnomas-yellow"></i> Nueva Respuesta
-                </h3>
-                <button onclick="closeQuestionModal()" class="text-tecnomas-muted hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            
-            <form id="questionForm" onsubmit="saveQuestion(event)" class="p-6 space-y-4">
-                <input type="hidden" id="questionId">
-
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Título / Pregunta Predeterminada</label>
-                    <input type="text" id="questionTitle" required placeholder="Ej: Medios de pago y cuotas" 
-                        class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Categoría de Producto</label>
-                    <select id="questionCategory" required class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 focus:outline-none focus:border-tecnomas-yellow">
-                        <!-- Dynamic Categories -->
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Texto de la Respuesta (Se copiará al hacer clic)</label>
-                    <textarea id="questionAnswer" required rows="6" placeholder="Escribe la respuesta guardada para tus clientes..." 
-                        class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow leading-relaxed"></textarea>
-                </div>
-
-                <div class="pt-2 flex justify-end gap-3">
-                    <button type="button" onclick="closeQuestionModal()" class="px-4 py-2 bg-tecnomas-purpleDark/50 hover:bg-tecnomas-purpleDark text-slate-300 text-xs font-semibold rounded-xl transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-5 py-2.5 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold uppercase tracking-wider text-xs rounded-xl shadow-md transition">
-                        Guardar Respuesta
-                    </button>
-                </div>
-            </form>
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="respCategory" class="form-control" required></select>
         </div>
-    </div>
-
-    <!-- MODAL: MANAGE CATEGORIES -->
-    <div id="categoryModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-            <div class="px-6 py-4 border-b border-tecnomas-border flex justify-between items-center bg-tecnomas-purpleDeep/60">
-                <h3 class="font-display text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-tags text-tecnomas-yellow"></i> Editar Categorías
-                </h3>
-                <button onclick="closeCategoryModal()" class="text-tecnomas-muted hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            
-            <div class="p-6 space-y-5">
-                <!-- Add category form -->
-                <form onsubmit="addCategory(event)" class="flex gap-2">
-                    <input type="text" id="newCategoryName" required placeholder="Nueva categoría..." 
-                        class="flex-1 px-3.5 py-2 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow">
-                    <button type="submit" class="px-4 py-2 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold uppercase tracking-wider text-xs rounded-xl transition flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> Añadir
-                    </button>
-                </form>
-
-                <!-- List of categories -->
-                <div class="space-y-2 max-h-60 overflow-y-auto pr-1" id="categoriesManageList">
-                    <!-- Dynamic Category Item List -->
-                </div>
-            </div>
-
-            <div class="px-6 py-3 bg-[#121216] border-t border-tecnomas-border flex justify-end">
-                <button onclick="closeCategoryModal()" class="px-4 py-2 bg-tecnomas-purpleDark hover:bg-tecnomas-purpleDark/80 text-white text-xs font-semibold rounded-xl transition">
-                    Cerrar
-                </button>
-            </div>
+        <div class="form-group">
+          <label>Contenido del Mensaje</label>
+          <textarea id="respContent" class="form-control" placeholder="Escribe el texto que se copiará al portapapeles..." required></textarea>
         </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('responseModal')">Cancelar</button>
+          <button type="submit" class="btn btn-yellow">Guardar Respuesta</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <!-- JAVASCRIPT LOGIC - JSONSTORAGE.NET INTEGRATION ENGINE -->
-    <script>
-        // --- API CONFIGURATION ---
-        const MASTER_API_KEY = "3ece9911-23ff-4eca-bb69-feaf41441344";
-        const API_BASE_URL = "https://api.jsonstorage.net/v1/json";
+  <!-- Modal: Conectar Sync ID -->
+  <div class="modal-overlay" id="syncModal">
+    <div class="modal">
+      <div class="modal-title">Cargar desde la Nube</div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">
+        Ingresa tu Sync ID existente para descargar y sincronizar las respuestas en este dispositivo.
+      </p>
+      <div class="form-group">
+        <label>Sync ID de Tecnomas</label>
+        <input type="text" id="inputSyncId" class="form-control" placeholder="Ej: 65a123bc45de6789..." required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('syncModal')">Cancelar</button>
+        <button type="button" class="btn btn-purple" onclick="confirmLoadFromCloud()">Cargar Datos</button>
+      </div>
+    </div>
+  </div>
 
-        // Initial Sample Data for Tecnomas
-        const INITIAL_CATEGORIES = [
-            "Medios de Pago",
-            "Envíos y Entregas",
-            "Garantías y Cambios",
-            "Servicio Técnico",
-            "Juegos y Consolas",
-            "Hardware / PC"
-        ];
+  <!-- Modal: Gestionar Categorías -->
+  <div class="modal-overlay" id="categoriesModal">
+    <div class="modal">
+      <div class="modal-title">Gestionar Categorías</div>
+      <div class="form-group">
+        <label>Agregar Nueva Categoría</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="newCatInput" class="form-control" placeholder="Nombre de categoría...">
+          <button type="button" class="btn btn-yellow" onclick="addCategory()">Agregar</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Categorías Existentes</label>
+        <div id="catList" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('categoriesModal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
 
-        const INITIAL_QUESTIONS = [
-            {
-                id: "101",
-                category: "Medios de Pago",
-                title: "Medios de Pago y Descuentos",
-                answer: "¡Hola! En TECNOMAS aceptamos efectivo, transferencia bancaria (con un 10% de descuento automático), Mercado Pago y tarjetas de crédito en cuotas. ¿Qué producto te gustaría abonar?"
-            },
-            {
-                id: "102",
-                category: "Envíos y Entregas",
-                title: "Envíos en el día y Correo",
-                answer: "¡Hola! Realizamos envíos en el día por motomensajería en CABA y GBA. Para el resto del país enviamos a través de Correo Argentino / Andreani con código de seguimiento en vivo. ¿A qué localidad sería la entrega?"
-            },
-            {
-                id: "103",
-                category: "Garantías y Cambios",
-                title: "Garantía Oficial Tecnomas",
-                answer: "¡Hola! Todos nuestros productos cuentan con garantía oficial de TECNOMAS. Entregamos factura digital y respaldo ante cualquier falla técnica. Conservá la caja y empaque original."
-            },
-            {
-                id: "104",
-                category: "Servicio Técnico",
-                title: "Mantenimiento Preventivo de Consolas / PC",
-                answer: "¡Hola! El servicio técnico incluye limpieza profunda de ventiladores, reemplazo de pasta térmica de alta conductividad y prueba de rendimiento. Demora estimada: 24 a 48 hs. Podés traer tu equipo a nuestro local sin turno previo."
-            },
-            {
-                id: "105",
-                category: "Juegos y Consolas",
-                title: "Disponibilidad de Juegos y Accesorios",
-                answer: "¡Hola! Sí, tenemos stock disponible para retiro inmediato en nuestro local o para envío en el día. Si querés te lo reservamos a tu nombre."
-            },
-            {
-                id: "106",
-                category: "Hardware / PC",
-                title: "Presupuesto de PC Gamer a Medida",
-                answer: "¡Hola! En TECNOMAS diseñamos y armamos computadoras a medida según tus necesidades y presupuesto. Comentanos qué juegos o programas querés usar y te cotizamos el mejor combo."
-            }
-        ];
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">¡Copiado al portapapeles!</div>
 
-        // --- APP STATE ---
-        let syncId = localStorage.getItem("tecnomas_sync_id") || null;
-        let categories = [];
-        let questions = [];
-        let currentCategory = "Todas";
+  <script>
+    // Configuración API JsonStorage
+    const JSONSTORAGE_API_KEY = "3ece9911-23ff-4eca-bb69-feaf41441344";
+    
+    // Datos iniciales por defecto de Tecnomas
+    const defaultData = {
+      categories: ["General", "Horarios", "Envíos", "Garantías", "Pagos"],
+      responses: [
+        {
+          id: "1",
+          title: "Horarios y Ubicación",
+          category: "Horarios",
+          content: "Hola! 👋 Atendemos de Lunes a Viernes de 9:00 a 18:00 hs. Nos encontramos en Av. Tecnomas 1234."
+        },
+        {
+          id: "2",
+          title: "Métodos de Pago",
+          category: "Pagos",
+          content: "Aceptamos efectivo, transferencias bancarias y tarjetas de crédito/débito en hasta 3 cuotas sin interés 💳."
+        },
+        {
+          id: "3",
+          title: "Envíos a Domicilio",
+          category: "Envíos",
+          content: "Realizamos envíos a todo el país a través de correo local. Envíos en el día dentro de la ciudad en compras antes de las 13 hs."
+        }
+      ]
+    };
 
-        // --- APPLICATION LAUNCH ---
-        window.onload = function() {
-            loadLocalData();
-            if (syncId) {
-                document.getElementById("syncIdDisplay").innerText = syncId;
-            }
-            renderCategoriesTab();
-            renderQuestions();
+    // Estado global de la app
+    let state = {
+      categories: [],
+      responses: [],
+      activeCategory: "Todas",
+      syncId: localStorage.getItem("tecnomas_sync_id") || ""
+    };
+
+    // Inicialización
+    document.addEventListener("DOMContentLoaded", () => {
+      loadLocalState();
+      updateSyncDisplay();
+      renderCategoryTabs();
+      renderCards();
+    });
+
+    // Cargar datos locales de LocalStorage
+    function loadLocalState() {
+      const saved = localStorage.getItem("tecnomas_app_data");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          state.categories = parsed.categories || defaultData.categories;
+          state.responses = parsed.responses || defaultData.responses;
+        } catch (e) {
+          state.categories = defaultData.categories;
+          state.responses = defaultData.responses;
+        }
+      } else {
+        state.categories = defaultData.categories;
+        state.responses = defaultData.responses;
+        saveLocalState();
+      }
+    }
+
+    function saveLocalState() {
+      localStorage.setItem("tecnomas_app_data", JSON.stringify({
+        categories: state.categories,
+        responses: state.responses
+      }));
+    }
+
+    function updateSyncDisplay() {
+      const display = document.getElementById("syncIdDisplay");
+      display.textContent = state.syncId ? state.syncId : "No generado";
+    }
+
+    // --- Sincronización con JsonStorage.net API ---
+
+    async function saveToCloud() {
+      showToast("Sincronizando con la nube...");
+      
+      const payload = {
+        categories: state.categories,
+        responses: state.responses
+      };
+
+      try {
+        if (!state.syncId) {
+          // Primera vez: Crear registro con POST
+          const response = await fetch(`https://api.jsonstorage.net/v1/json?apiKey=${JSONSTORAGE_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+          
+          const result = await response.json();
+          // Extraer ID de la respuesta o URI
+          const createdId = result.uri ? result.uri.split('/').pop() : (result.id || result.objectId);
+
+          if (createdId) {
+            state.syncId = createdId;
+            localStorage.setItem("tecnomas_sync_id", createdId);
+            updateSyncDisplay();
+            showToast("¡Creado y guardado en la nube!");
+          } else {
+            showToast("Guardado en la nube con éxito.");
+          }
+        } else {
+          // Actualización: Usar PUT sobre el ID existente
+          const response = await fetch(`https://api.jsonstorage.net/v1/json/${state.syncId}?apiKey=${JSONSTORAGE_API_KEY}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+          showToast("¡Actualizado en la nube!");
+        }
+      } catch (err) {
+        console.error("Cloud error:", err);
+        alert("Error al guardar en la nube: " + err.message);
+      }
+    }
+
+    function loadFromCloud() {
+      document.getElementById("inputSyncId").value = state.syncId || "";
+      openModal("syncModal");
+    }
+
+    async function confirmLoadFromCloud() {
+      const inputId = document.getElementById("inputSyncId").value.trim();
+      if (!inputId) {
+        alert("Por favor ingresa un Sync ID válido.");
+        return;
+      }
+
+      showToast("Cargando datos...");
+      try {
+        const response = await fetch(`https://api.jsonstorage.net/v1/json/${inputId}?apiKey=${JSONSTORAGE_API_KEY}`);
+        
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        
+        const data = await response.json();
+
+        if (data && data.responses && data.categories) {
+          state.responses = data.responses;
+          state.categories = data.categories;
+          state.syncId = inputId;
+          
+          localStorage.setItem("tecnomas_sync_id", inputId);
+          saveLocalState();
+          
+          updateSyncDisplay();
+          renderCategoryTabs();
+          renderCards();
+          
+          closeModal("syncModal");
+          showToast("¡Datos cargados con éxito!");
+        } else {
+          alert("El formato de datos en ese Sync ID no es válido.");
+        }
+      } catch (err) {
+        console.error("Load cloud error:", err);
+        alert("Error al cargar datos desde la nube. Revisa el Sync ID o la conexión.");
+      }
+    }
+
+    function copySyncId() {
+      if (!state.syncId) {
+        alert("Aún no tienes un Sync ID. Haz clic en 'Guardar en Nube' para generar uno.");
+        return;
+      }
+      navigator.clipboard.writeText(state.syncId);
+      showToast("¡Sync ID copiado!");
+    }
+
+    // --- Renderizado de UI ---
+
+    function renderCategoryTabs() {
+      const container = document.getElementById("categoryTabs");
+      const allCat = ["Todas", ...state.categories];
+      
+      container.innerHTML = allCat.map(cat => `
+        <div class="cat-tab ${state.activeCategory === cat ? 'active' : ''}" onclick="selectCategory('${cat}')">
+          ${cat}
+        </div>
+      `).join("");
+    }
+
+    function selectCategory(cat) {
+      state.activeCategory = cat;
+      renderCategoryTabs();
+      renderCards();
+    }
+
+    function renderCards() {
+      const grid = document.getElementById("cardsGrid");
+      const search = document.getElementById("searchInput").value.toLowerCase();
+
+      let filtered = state.responses;
+
+      if (state.activeCategory !== "Todas") {
+        filtered = filtered.filter(r => r.category === state.activeCategory);
+      }
+
+      if (search) {
+        filtered = filtered.filter(r => 
+          r.title.toLowerCase().includes(search) || 
+          r.content.toLowerCase().includes(search) ||
+          r.category.toLowerCase().includes(search)
+        );
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-state">No se encontraron respuestas para esta búsqueda.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">${escapeHtml(item.title)}</div>
+            <span class="card-tag">${escapeHtml(item.category)}</span>
+          </div>
+          <div class="card-body">${escapeHtml(item.content)}</div>
+          <div class="card-actions">
+            <div>
+              <button class="btn btn-outline btn-sm" onclick="openEditModal('${item.id}')">✏️ Editar</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteResponse('${item.id}')">🗑️</button>
+            </div>
+            <button class="btn btn-yellow btn-sm" onclick="copyToClipboard(\`${escapeJsString(item.content)}\`)">📋 Copiar</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // --- Operaciones CRUD ---
+
+    function openAddModal() {
+      document.getElementById("modalResponseTitle").textContent = "Nueva Respuesta";
+      document.getElementById("respId").value = "";
+      document.getElementById("respTitle").value = "";
+      document.getElementById("respContent").value = "";
+      
+      populateCategorySelect();
+      openModal("responseModal");
+    }
+
+    function openEditModal(id) {
+      const resp = state.responses.find(r => r.id === id);
+      if (!resp) return;
+
+      document.getElementById("modalResponseTitle").textContent = "Editar Respuesta";
+      document.getElementById("respId").value = resp.id;
+      document.getElementById("respTitle").value = resp.title;
+      document.getElementById("respContent").value = resp.content;
+
+      populateCategorySelect(resp.category);
+      openModal("responseModal");
+    }
+
+    function populateCategorySelect(selectedCat = "") {
+      const select = document.getElementById("respCategory");
+      select.innerHTML = state.categories.map(c => `
+        <option value="${c}" ${c === selectedCat ? 'selected' : ''}>${c}</option>
+      `).join("");
+    }
+
+    function handleSaveResponse(event) {
+      event.preventDefault();
+      const id = document.getElementById("respId").value;
+      const title = document.getElementById("respTitle").value.trim();
+      const category = document.getElementById("respCategory").value;
+      const content = document.getElementById("respContent").value.trim();
+
+      if (!title || !content) return;
+
+      if (id) {
+        // Editar
+        const index = state.responses.findIndex(r => r.id === id);
+        if (index !== -1) {
+          state.responses[index] = { id, title, category, content };
+        }
+      } else {
+        // Crear
+        const newResp = {
+          id: Date.now().toString(),
+          title,
+          category,
+          content
         };
-
-        // --- LOCAL STORAGE ENGINE ---
-
-        function loadLocalData() {
-            const cachedCats = localStorage.getItem("tecnomas_cached_categories");
-            const cachedQues = localStorage.getItem("tecnomas_cached_questions");
-
-            if (cachedCats && cachedQues) {
-                try {
-                    categories = JSON.parse(cachedCats);
-                    questions = JSON.parse(cachedQues);
-                } catch (e) {
-                    categories = [...INITIAL_CATEGORIES];
-                    questions = [...INITIAL_QUESTIONS];
-                }
-            } else {
-                categories = [...INITIAL_CATEGORIES];
-                questions = [...INITIAL_QUESTIONS];
-                saveToLocalCache();
-            }
-        }
-
-        function saveToLocalCache() {
-            localStorage.setItem("tecnomas_cached_categories", JSON.stringify(categories));
-            localStorage.setItem("tecnomas_cached_questions", JSON.stringify(questions));
-        }
-
-        // --- CLOUD SYNC ENGINE (JSONSTORAGE.NET MANUAL CONTROLS) ---
-
-        async function saveToCloudManual() {
-            updateStatusBadge("loading", "Guardando...");
-
-            const payload = {
-                appName: "Tecnomas Respuestas Rapidas",
-                updatedAt: new Date().toISOString(),
-                categories: categories,
-                questions: questions
-            };
-
-            try {
-                if (!syncId) {
-                    // Create new bin via POST
-                    const response = await fetch(`${API_BASE_URL}?apiKey=${MASTER_API_KEY}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        const uri = data.uri || data.url;
-                        if (uri) {
-                            const parts = uri.split('/');
-                            syncId = parts[parts.length - 1];
-                            localStorage.setItem("tecnomas_sync_id", syncId);
-                            document.getElementById("syncIdDisplay").innerText = syncId;
-                            updateStatusBadge("online", "Guardado");
-                            showToast("¡Base de datos guardada en la Nube!");
-                        } else {
-                            throw new Error("No se recibió URI del servidor");
-                        }
-                    } else {
-                        throw new Error(`Error de servidor (${response.status})`);
-                    }
-                } else {
-                    // Update existing bin via PUT
-                    const response = await fetch(`${API_BASE_URL}/${syncId}?apiKey=${MASTER_API_KEY}`, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.ok) {
-                        updateStatusBadge("online", "Actualizado");
-                        showToast("¡Sincronizado con éxito en la Nube!");
-                    } else {
-                        throw new Error(`Error de actualización (${response.status})`);
-                    }
-                }
-            } catch (err) {
-                console.error("Error al guardar en la nube:", err);
-                updateStatusBadge("error", "Error Nube");
-                showToast("Error al conectar con la nube", "error");
-            }
-        }
-
-        async function loadFromCloudManual(targetSyncId) {
-            if (!targetSyncId) return;
-            updateStatusBadge("loading", "Descargando...");
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/${targetSyncId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && Array.isArray(data.categories) && Array.isArray(data.questions)) {
-                        categories = data.categories;
-                        questions = data.questions;
-                        syncId = targetSyncId;
-                        
-                        localStorage.setItem("tecnomas_sync_id", syncId);
-                        saveToLocalCache();
-
-                        document.getElementById("syncIdDisplay").innerText = syncId;
-                        updateStatusBadge("online", "Conectado");
-
-                        renderCategoriesTab();
-                        renderQuestions();
-                        showToast("¡Datos cargados correctamente desde la Nube!");
-                    } else {
-                        throw new Error("Formato de datos no válido");
-                    }
-                } else {
-                    throw new Error(`Sync ID no encontrado (${response.status})`);
-                }
-            } catch (error) {
-                console.error("Error al cargar desde Sync ID:", error);
-                updateStatusBadge("error", "Error Carga");
-                showToast("No se pudo cargar el Sync ID indicado", "error");
-            }
-        }
-
-        function updateStatusBadge(state, message) {
-            const badge = document.getElementById("syncBadge");
-            const dot = document.getElementById("syncDot");
-            const statusText = document.getElementById("syncStatusText");
-
-            statusText.innerText = message;
-
-            if (state === "online") {
-                badge.className = "flex items-center gap-2 text-xs font-semibold text-emerald-400";
-                dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400";
-            } else if (state === "loading") {
-                badge.className = "flex items-center gap-2 text-xs font-semibold text-amber-300";
-                dot.className = "w-2.5 h-2.5 rounded-full bg-amber-300 animate-spin";
-            } else {
-                badge.className = "flex items-center gap-2 text-xs font-semibold text-rose-400";
-                dot.className = "w-2.5 h-2.5 rounded-full bg-rose-400";
-            }
-        }
-
-        // --- SYNC ID MANAGEMENT MODALS ---
-
-        function copySyncId() {
-            if (!syncId || syncId === "Sin ID") {
-                showToast("Aún no has guardado en la nube para tener un Sync ID", "error");
-                return;
-            }
-            execCommandCopy(syncId);
-            showToast("Sync ID copiado al portapapeles");
-        }
-
-        function openConnectModal() {
-            document.getElementById("connectModal").classList.remove("hidden");
-        }
-
-        function closeConnectModal() {
-            document.getElementById("connectModal").classList.add("hidden");
-        }
-
-        async function connectExistingSyncId(e) {
-            e.preventDefault();
-            const inputId = document.getElementById("inputConnectSyncId").value.trim();
-
-            if (inputId) {
-                closeConnectModal();
-                await loadFromCloudManual(inputId);
-            }
-        }
-
-        // --- RENDER LOGIC ---
-
-        function renderCategoriesTab() {
-            const container = document.getElementById("categoriesTabContainer");
-            let html = `
-                <button onclick="filterCategory('Todas')" class="px-4 py-2 rounded-xl text-xs font-display uppercase tracking-wider whitespace-nowrap transition ${currentCategory === 'Todas' ? 'bg-tecnomas-yellow text-tecnomas-purpleDeep font-bold shadow-md yellow-glow' : 'bg-tecnomas-cardBg text-tecnomas-muted hover:text-white border border-tecnomas-border'}">
-                    Todas (${questions.length})
-                </button>
-            `;
-
-            categories.forEach(cat => {
-                const count = questions.filter(q => q.category === cat).length;
-                const isActive = currentCategory === cat;
-                html += `
-                    <button onclick="filterCategory('${escapeHtml(cat)}')" class="px-4 py-2 rounded-xl text-xs font-display uppercase tracking-wider whitespace-nowrap transition ${isActive ? 'bg-tecnomas-yellow text-tecnomas-purpleDeep font-bold shadow-md yellow-glow' : 'bg-tecnomas-cardBg text-tecnomas-muted hover:text-white border border-tecnomas-border'}">
-                        ${escapeHtml(cat)} (${count})
-                    </button>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        function filterCategory(cat) {
-            currentCategory = cat;
-            renderCategoriesTab();
-            renderQuestions();
-        }
-
-        function renderQuestions() {
-            const container = document.getElementById("questionsContainer");
-            const emptyState = document.getElementById("emptyState");
-            const searchQuery = document.getElementById("searchInput").value.toLowerCase().trim();
-            const clearBtn = document.getElementById("clearSearchBtn");
-
-            clearBtn.classList.toggle("hidden", searchQuery === "");
-
-            const filtered = questions.filter(q => {
-                const matchesCategory = (currentCategory === "Todas" || q.category === currentCategory);
-                const matchesSearch = q.title.toLowerCase().includes(searchQuery) || 
-                                      q.answer.toLowerCase().includes(searchQuery) ||
-                                      q.category.toLowerCase().includes(searchQuery);
-                return matchesCategory && matchesSearch;
-            });
-
-            if (filtered.length === 0) {
-                container.innerHTML = "";
-                emptyState.classList.remove("hidden");
-                return;
-            }
-
-            emptyState.classList.add("hidden");
-
-            let html = "";
-            filtered.forEach(q => {
-                html += `
-                    <div class="bg-tecnomas-cardBg border border-tecnomas-border hover:border-tecnomas-purpleDark/80 rounded-2xl p-5 flex flex-col justify-between shadow-lg transition duration-200 hover:bg-tecnomas-cardHover">
-                        <div>
-                            <div class="flex items-start justify-between gap-2 mb-3">
-                                <span class="px-2.5 py-1 bg-tecnomas-purpleDark/40 border border-tecnomas-purpleDark text-amber-300 text-[10px] font-semibold tracking-wider rounded-lg uppercase">
-                                    ${escapeHtml(q.category)}
-                                </span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="editQuestion('${q.id}')" title="Editar" class="w-7 h-7 rounded-lg bg-[#121216] hover:bg-tecnomas-purpleDark text-tecnomas-muted hover:text-white transition flex items-center justify-center text-xs">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-                                    <button onclick="openDeleteModal('${q.id}')" title="Eliminar" class="w-7 h-7 rounded-lg bg-[#121216] hover:bg-rose-950/80 text-tecnomas-muted hover:text-rose-400 transition flex items-center justify-center text-xs">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <h3 class="font-display text-lg font-bold text-white mb-2 leading-snug tracking-wide">${escapeHtml(q.title)}</h3>
-
-                            <div class="p-3.5 bg-[#121216] border border-tecnomas-border/80 rounded-xl text-xs text-slate-200 whitespace-pre-wrap leading-relaxed mb-4 max-h-48 overflow-y-auto">
-                                ${escapeHtml(q.answer)}
-                            </div>
-                        </div>
-
-                        <button id="btn-copy-${q.id}" onclick="copyAnswer('${q.id}')" class="w-full py-2.5 px-4 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition duration-150 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-copy text-sm"></i>
-                            <span>Copiar Respuesta</span>
-                        </button>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        // --- CLIPBOARD ACTION ---
-
-        function copyAnswer(id) {
-            const question = questions.find(q => q.id === id);
-            if (!question) return;
-
-            const textToCopy = question.answer;
-
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    triggerCopyFeedback(id);
-                }).catch(() => {
-                    execCommandCopy(textToCopy, id);
-                });
-            } else {
-                execCommandCopy(textToCopy, id);
-            }
-        }
-
-        function execCommandCopy(text, id = null) {
-            const textarea = document.createElement("textarea");
-            textarea.value = text;
-            textarea.style.position = "fixed";
-            textarea.style.left = "-9999px";
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                if (id) triggerCopyFeedback(id);
-            } catch (err) {
-                showToast("Error al copiar texto", "error");
-            }
-            document.body.removeChild(textarea);
-        }
-
-        function triggerCopyFeedback(id) {
-            const btn = document.getElementById(`btn-copy-${id}`);
-            if (btn) {
-                const originalContent = btn.innerHTML;
-                btn.className = "w-full py-2.5 px-4 bg-emerald-400 text-slate-950 font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition duration-150 flex items-center justify-center gap-2";
-                btn.innerHTML = `<i class="fa-solid fa-check text-sm"></i> <span>¡Copiado!</span>`;
-
-                setTimeout(() => {
-                    btn.className = "w-full py-2.5 px-4 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition duration-150 flex items-center justify-center gap-2";
-                    btn.innerHTML = originalContent;
-                }, 1800);
-            }
-            showToast("¡Respuesta copiada al portapapeles!");
-        }
-
-        function clearSearch() {
-            document.getElementById("searchInput").value = "";
-            renderQuestions();
-        }
-
-        // --- QUESTIONS CRUD ---
-
-        function openDeleteModal(id) {
-            document.getElementById("deleteTargetId").value = id;
-            document.getElementById("deleteModal").classList.remove("hidden");
-        }
-
-        function closeDeleteModal() {
-            document.getElementById("deleteModal").classList.add("hidden");
-        }
-
-        function confirmDeleteQuestion() {
-            const id = document.getElementById("deleteTargetId").value;
-            if (id) {
-                questions = questions.filter(q => q.id !== id);
-                saveToLocalCache();
-                renderCategoriesTab();
-                renderQuestions();
-                showToast("Respuesta eliminada localmente");
-            }
-            closeDeleteModal();
-        }
-
-        function openQuestionModal(editId = null) {
-            const modal = document.getElementById("questionModal");
-            const selectCat = document.getElementById("questionCategory");
-            
-            selectCat.innerHTML = categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
-
-            if (editId) {
-                const q = questions.find(item => item.id === editId);
-                if (q) {
-                    document.getElementById("modalTitle").innerHTML = `<i class="fa-solid fa-pen-to-square text-tecnomas-yellow"></i> Editar Respuesta`;
-                    document.getElementById("questionId").value = q.id;
-                    document.getElementById("questionTitle").value = q.title;
-                    document.getElementById("questionCategory").value = q.category;
-                    document.getElementById("questionAnswer").value = q.answer;
-                }
-            } else {
-                document.getElementById("modalTitle").innerHTML = `<i class="fa-solid fa-plus text-tecnomas-yellow"></i> Nueva Respuesta`;
-                document.getElementById("questionForm").reset();
-                document.getElementById("questionId").value = "";
-                if (currentCategory !== "Todas") {
-                    document.getElementById("questionCategory").value = currentCategory;
-                }
-            }
-
-            modal.classList.remove("hidden");
-        }
-
-        function closeQuestionModal() {
-            document.getElementById("questionModal").classList.add("hidden");
-        }
-
-        function saveQuestion(e) {
-            e.preventDefault();
-            const id = document.getElementById("questionId").value;
-            const title = document.getElementById("questionTitle").value.trim();
-            const category = document.getElementById("questionCategory").value;
-            const answer = document.getElementById("questionAnswer").value.trim();
-
-            if (id) {
-                const index = questions.findIndex(q => q.id === id);
-                if (index !== -1) {
-                    questions[index] = { id, title, category, answer };
-                }
-                showToast("Respuesta actualizada");
-            } else {
-                const newQ = {
-                    id: Date.now().toString(),
-                    title,
-                    category,
-                    answer
-                };
-                questions.unshift(newQ);
-                showToast("Nueva respuesta guardada");
-            }
-
-            saveToLocalCache();
-            renderCategoriesTab();
-            renderQuestions();
-            closeQuestionModal();
-        }
-
-        function editQuestion(id) {
-            openQuestionModal(id);
-        }
-
-        // --- CATEGORIES CRUD ---
-
-        function openCategoryModal() {
-            renderManageCategoriesList();
-            document.getElementById("categoryModal").classList.remove("hidden");
-        }
-
-        function closeCategoryModal() {
-            document.getElementById("categoryModal").classList.add("hidden");
-        }
-
-        function renderManageCategoriesList() {
-            const list = document.getElementById("categoriesManageList");
-            let html = "";
-
-            categories.forEach((cat, index) => {
-                const count = questions.filter(q => q.category === cat).length;
-                html += `
-                    <div class="flex items-center justify-between p-3 bg-[#121216] border border-tecnomas-border rounded-xl">
-                        <span class="text-xs font-semibold text-slate-200">${escapeHtml(cat)} <span class="text-tecnomas-muted">(${count})</span></span>
-                        <button onclick="deleteCategory(${index})" class="text-tecnomas-muted hover:text-rose-400 p-1 transition">
-                            <i class="fa-solid fa-trash-can text-xs"></i>
-                        </button>
-                    </div>
-                `;
-            });
-
-            list.innerHTML = html;
-        }
-
-        function addCategory(e) {
-            e.preventDefault();
-            const input = document.getElementById("newCategoryName");
-            const val = input.value.trim();
-
-            if (val && !categories.includes(val)) {
-                categories.push(val);
-                saveToLocalCache();
-                renderManageCategoriesList();
-                renderCategoriesTab();
-                input.value = "";
-                showToast("Categoría añadida");
-            }
-        }
-
-        function deleteCategory(index) {
-            const catName = categories[index];
-            const hasQuestions = questions.some(q => q.category === catName);
-
-            if (hasQuestions) {
-                showToast(`No puedes eliminar "${catName}" porque tiene respuestas asociadas.`, "error");
-                return;
-            }
-
-            categories.splice(index, 1);
-            saveToLocalCache();
-            renderManageCategoriesList();
-            renderCategoriesTab();
-            if (currentCategory === catName) {
-                currentCategory = "Todas";
-            }
-            renderQuestions();
-            showToast("Categoría eliminada");
-        }
-
-        // --- EXPORT / IMPORT FILE BACKUPS ---
-
-        function exportConfig() {
-            const backupData = {
-                appName: "TECNOMAS Respuestas Rapidas",
-                exportDate: new Date().toISOString(),
-                syncId: syncId,
-                categories: categories,
-                questions: questions
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            
-            const dateStr = new Date().toISOString().slice(0,10);
-            downloadAnchor.setAttribute("download", `Tecnomas_Respuestas_${dateStr}.txt`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-
-            showToast("Backup guardado en archivo TXT");
-        }
-
-        function importConfig(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-
-                    if (data.categories && Array.isArray(data.categories) && data.questions && Array.isArray(data.questions)) {
-                        categories = data.categories;
-                        questions = data.questions;
-
-                        if (data.syncId) {
-                            syncId = data.syncId;
-                            localStorage.setItem("tecnomas_sync_id", syncId);
-                            document.getElementById("syncIdDisplay").innerText = syncId;
-                        }
-
-                        saveToLocalCache();
-                        currentCategory = "Todas";
-                        renderCategoriesTab();
-                        renderQuestions();
-
-                        showToast("¡Respuestas e información restauradas!");
-                    } else {
-                        showToast("Formato de archivo no válido", "error");
-                    }
-                } catch (err) {
-                    showToast("Error al importar archivo", "error");
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = "";
-        }
-
-        // --- TOASTER ---
-
-        function showToast(message, type = "success") {
-            const toast = document.getElementById("toast");
-            const msg = document.getElementById("toastMessage");
-            const icon = document.getElementById("toastIcon");
-
-            msg.innerText = message;
-            if (type === "error") {
-                icon.className = "fa-solid fa-triangle-exclamation text-rose-500";
-            } else {
-                icon.className = "fa-solid fa-check text-tecnomas-purpleDeep";
-            }
-
-            toast.classList.remove("translate-y-20", "opacity-0");
-            toast.classList.add("translate-y-0", "opacity-100");
-
-            setTimeout(() => {
-                toast.classList.remove("translate-y-0", "opacity-100");
-                toast.classList.add("translate-y-20", "opacity-0");
-            }, 2500);
-        }
-
-        // --- UTILS ---
-
-        function escapeHtml(text) {
-            if (!text) return "";
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-    </script>
+        state.responses.push(newResp);
+      }
+
+      saveLocalState();
+      renderCards();
+      closeModal("responseModal");
+      showToast("Respuesta guardada localmente");
+    }
+
+    function deleteResponse(id) {
+      if (confirm("¿Estás seguro de que deseas eliminar esta respuesta?")) {
+        state.responses = state.responses.filter(r => r.id !== id);
+        saveLocalState();
+        renderCards();
+        showToast("Respuesta eliminada");
+      }
+    }
+
+    // --- Categorías ---
+
+    function openCategoriesModal() {
+      renderCategoriesList();
+      openModal("categoriesModal");
+    }
+
+    function renderCategoriesList() {
+      const list = document.getElementById("catList");
+      list.innerHTML = state.categories.map(c => `
+        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 8px 12px; border-radius: 6px;">
+          <span style="font-size: 13px;">${escapeHtml(c)}</span>
+          <button class="btn btn-danger btn-sm" onclick="removeCategory('${escapeJsString(c)}')">Eliminar</button>
+        </div>
+      `).join("");
+    }
+
+    function addCategory() {
+      const input = document.getElementById("newCatInput");
+      const name = input.value.trim();
+      if (name && !state.categories.includes(name)) {
+        state.categories.push(name);
+        input.value = "";
+        saveLocalState();
+        renderCategoryTabs();
+        renderCategoriesList();
+      }
+    }
+
+    function removeCategory(catName) {
+      if (state.categories.length <= 1) {
+        alert("Debes mantener al menos una categoría.");
+        return;
+      }
+      if (confirm(`¿Eliminar la categoría "${catName}"? Las respuestas pasarán a la primera categoría disponible.`)) {
+        state.categories = state.categories.filter(c => c !== catName);
+        const fallbackCat = state.categories[0];
+        state.responses.forEach(r => {
+          if (r.category === catName) r.category = fallbackCat;
+        });
+        if (state.activeCategory === catName) state.activeCategory = "Todas";
+        saveLocalState();
+        renderCategoryTabs();
+        renderCards();
+        renderCategoriesList();
+      }
+    }
+
+    // --- Copia al Portapapeles y Backup TXT ---
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("¡Copiado al portapapeles!");
+      }).catch(err => {
+        console.error("Error al copiar: ", err);
+      });
+    }
+
+    function exportBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+        categories: state.categories,
+        responses: state.responses
+      }, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `tecnomas_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // --- Utilidades ---
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("active");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("active");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function escapeJsString(str) {
+      return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    }
+  </script>
 </body>
 </html>
