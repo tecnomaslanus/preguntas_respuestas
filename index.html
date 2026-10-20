@@ -38,6 +38,7 @@
       font-family: var(--font-body);
       min-height: 100vh;
       padding: 20px;
+      padding-bottom: 90px; /* Espacio para barra flotante de selección */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -141,6 +142,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       transition: all 0.2s ease;
       text-decoration: none;
@@ -189,6 +191,20 @@
     .btn-sm {
       padding: 6px 10px;
       font-size: 12px;
+    }
+
+    .btn-copy-large {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 5px;
+      box-shadow: 0 4px 10px rgba(255, 203, 3, 0.15);
+    }
+
+    .btn-copy-large:active {
+      transform: scale(0.98);
     }
 
     /* Search & Controls */
@@ -268,12 +284,51 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 12px;
+      position: relative;
       transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card.selected {
+      border-color: var(--primary-yellow);
+      background-color: #1f1f2a;
     }
 
     .card:hover {
       border-color: rgba(255, 203, 3, 0.4);
       transform: translateY(-2px);
+    }
+
+    .card-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .card-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--primary-yellow);
+    }
+
+    .btn-delete-icon {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 15px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-delete-icon:hover {
+      color: #dc3545;
+      background: rgba(220, 53, 69, 0.1);
     }
 
     .card-header {
@@ -299,6 +354,7 @@
       border-radius: 12px;
       text-transform: uppercase;
       font-weight: 600;
+      white-space: nowrap;
     }
 
     .card-body {
@@ -314,12 +370,43 @@
       overflow-y: auto;
     }
 
-    .card-actions {
+    .card-footer-actions {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       gap: 8px;
-      margin-top: 5px;
+    }
+
+    .card-secondary-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Floating Batch Selection Bar */
+    .batch-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(150px);
+      background: var(--card-bg);
+      border: 1px solid var(--primary-yellow);
+      padding: 12px 24px;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 900;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .batch-bar.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .batch-count {
+      font-weight: 700;
+      color: var(--primary-yellow);
+      font-size: 14px;
     }
 
     /* Modals */
@@ -480,6 +567,13 @@
     <div class="cards-grid" id="cardsGrid"></div>
   </div>
 
+  <!-- Floating Batch Selection Bar -->
+  <div class="batch-bar" id="batchBar">
+    <span class="batch-count" id="batchCountText">0 seleccionadas</span>
+    <button class="btn btn-outline btn-sm" onclick="selectAllVisibleCards()">Seleccionar todas</button>
+    <button class="btn btn-danger btn-sm" onclick="deleteSelectedResponses()">🗑️ Eliminar seleccionadas</button>
+  </div>
+
   <!-- Modal: Agregar / Editar Respuesta -->
   <div class="modal-overlay" id="responseModal">
     <div class="modal">
@@ -579,7 +673,8 @@
       categories: [],
       responses: [],
       activeCategory: "Todas",
-      syncId: localStorage.getItem("tecnomas_sync_id") || ""
+      syncId: localStorage.getItem("tecnomas_sync_id") || "",
+      selectedIds: new Set()
     };
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -631,7 +726,6 @@
 
       try {
         if (state.syncId) {
-          // Actualización mediante PUT
           const putResponse = await fetch(`https://api.jsonstorage.net/v1/json/${state.syncId}?apiKey=${JSONSTORAGE_API_KEY}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -649,7 +743,6 @@
           }
         }
 
-        // Crear nuevo espacio con POST
         const postResponse = await fetch(`https://api.jsonstorage.net/v1/json?apiKey=${JSONSTORAGE_API_KEY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -662,7 +755,6 @@
         let fullPath = "";
         
         if (result.uri) {
-          // Extraer la ruta {userId}/{itemId} de la URI completa
           fullPath = result.uri.replace("https://api.jsonstorage.net/v1/json/", "");
         }
 
@@ -693,7 +785,6 @@
         return;
       }
 
-      // Si el usuario pega la URL entera por error, nos quedamos solo con la ruta del ID
       if (inputId.includes("jsonstorage.net/v1/json/")) {
         inputId = inputId.split("jsonstorage.net/v1/json/")[1];
       }
@@ -701,7 +792,6 @@
       showToast("Cargando datos de la nube...");
 
       try {
-        // Intenta obtener primero mediante pública y luego con apiKey si requiere auth
         let response = await fetch(`https://api.jsonstorage.net/v1/json/${inputId}`);
         
         if (!response.ok) {
@@ -783,25 +873,90 @@
 
       if (filtered.length === 0) {
         grid.innerHTML = `<div class="empty-state">No se encontraron respuestas para esta búsqueda.</div>`;
+        updateBatchBar();
         return;
       }
 
-      grid.innerHTML = filtered.map(item => `
-        <div class="card">
+      grid.innerHTML = filtered.map(item => {
+        const isSelected = state.selectedIds.has(item.id);
+        return `
+        <div class="card ${isSelected ? 'selected' : ''}">
+          <div class="card-top-bar">
+            <input type="checkbox" class="card-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectCard('${item.id}', this.checked)">
+            <button class="btn-delete-icon" onclick="deleteResponse('${item.id}')" title="Eliminar respuesta">🗑️</button>
+          </div>
           <div class="card-header">
             <div class="card-title">${escapeHtml(item.title)}</div>
             <span class="card-tag">${escapeHtml(item.category)}</span>
           </div>
           <div class="card-body">${escapeHtml(item.content)}</div>
-          <div class="card-actions">
-            <div>
+          <div class="card-footer-actions">
+            <div class="card-secondary-actions">
               <button class="btn btn-outline btn-sm" onclick="openEditModal('${item.id}')">✏️ Editar</button>
-              <button class="btn btn-danger btn-sm" onclick="deleteResponse('${item.id}')">🗑️</button>
             </div>
-            <button class="btn btn-yellow btn-sm" onclick="copyToClipboard(\`${escapeJsString(item.content)}\`)">📋 Copiar</button>
+            <button class="btn btn-yellow btn-copy-large" onclick="copyToClipboard(\`${escapeJsString(item.content)}\`)">📋 Copiar Respuesta</button>
           </div>
         </div>
-      `).join("");
+      `}).join("");
+
+      updateBatchBar();
+    }
+
+    // --- Selección y Borrado Masivo ---
+
+    function toggleSelectCard(id, isChecked) {
+      if (isChecked) {
+        state.selectedIds.add(id);
+      } else {
+        state.selectedIds.delete(id);
+      }
+      renderCards();
+    }
+
+    function updateBatchBar() {
+      const bar = document.getElementById("batchBar");
+      const countText = document.getElementById("batchCountText");
+      const count = state.selectedIds.size;
+
+      if (count > 0) {
+        countText.textContent = `${count} seleccionada${count > 1 ? 's' : ''}`;
+        bar.classList.add("active");
+      } else {
+        bar.classList.remove("active");
+      }
+    }
+
+    function selectAllVisibleCards() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      let filtered = state.responses;
+
+      if (state.activeCategory !== "Todas") {
+        filtered = filtered.filter(r => r.category === state.activeCategory);
+      }
+
+      if (search) {
+        filtered = filtered.filter(r => 
+          r.title.toLowerCase().includes(search) || 
+          r.content.toLowerCase().includes(search) ||
+          r.category.toLowerCase().includes(search)
+        );
+      }
+
+      filtered.forEach(item => state.selectedIds.add(item.id));
+      renderCards();
+    }
+
+    function deleteSelectedResponses() {
+      const count = state.selectedIds.size;
+      if (count === 0) return;
+
+      if (confirm(`¿Estás seguro de que deseas eliminar las ${count} respuestas seleccionadas?`)) {
+        state.responses = state.responses.filter(r => !state.selectedIds.has(r.id));
+        state.selectedIds.clear();
+        saveLocalState();
+        renderCards();
+        showToast(`${count} respuesta(s) eliminada(s)`);
+      }
     }
 
     // --- Operaciones CRUD ---
@@ -869,6 +1024,7 @@
     function deleteResponse(id) {
       if (confirm("¿Estás seguro de que deseas eliminar esta respuesta?")) {
         state.responses = state.responses.filter(r => r.id !== id);
+        state.selectedIds.delete(id);
         saveLocalState();
         renderCards();
         showToast("Respuesta eliminada");
