@@ -38,7 +38,7 @@
       font-family: var(--font-body);
       min-height: 100vh;
       padding: 20px;
-      padding-bottom: 90px; /* Espacio para barra flotante de selección */
+      padding-bottom: 90px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -547,10 +547,12 @@
         <div class="sync-id-box" id="syncIdDisplay">No generado</div>
         <button class="btn btn-outline btn-sm" onclick="copySyncId()">📋 Copiar ID</button>
       </div>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn btn-yellow btn-sm" onclick="saveToCloud()">☁️ Guardar en Nube</button>
-        <button class="btn btn-purple btn-sm" onclick="loadFromCloud()">📥 Cargar de Nube</button>
-        <button class="btn btn-outline btn-sm" onclick="exportBackup()">💾 Backup TXT</button>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <button class="btn btn-yellow btn-sm" onclick="saveToCloud()">☁️ Guardar Nube</button>
+        <button class="btn btn-purple btn-sm" onclick="loadFromCloud()">📥 Cargar Nube</button>
+        <button class="btn btn-outline btn-sm" onclick="exportBackup()">💾 Exportar</button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('importFile').click()">📤 Importar</button>
+        <input type="file" id="importFile" style="display: none;" accept=".json,.txt" onchange="importBackup(event)">
       </div>
     </div>
 
@@ -821,13 +823,13 @@
         }
       } catch (err) {
         console.error("Load cloud error:", err);
-        alert("Error al cargar datos. Asegúrate de presionar 'Guardar en Nube' primero en el dispositivo principal para obtener el Sync ID completo.");
+        alert("Error al cargar datos. Asegúrate de presionar 'Guardar Nube' primero en el dispositivo principal para obtener el Sync ID completo.");
       }
     }
 
     function copySyncId() {
       if (!state.syncId) {
-        alert("Aún no tienes un Sync ID. Haz clic en 'Guardar en Nube' para generarlo.");
+        alert("Aún no tienes un Sync ID. Haz clic en 'Guardar Nube' para generarlo.");
         return;
       }
       navigator.clipboard.writeText(state.syncId);
@@ -1079,7 +1081,7 @@
       }
     }
 
-    // --- Utilidades ---
+    // --- Copia, Exportar e Importar Backup ---
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
@@ -1101,6 +1103,36 @@
       downloadAnchor.click();
       downloadAnchor.remove();
     }
+
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const content = e.target.result;
+          const parsed = JSON.parse(content);
+          
+          if (parsed && parsed.responses && parsed.categories) {
+            state.responses = parsed.responses;
+            state.categories = parsed.categories;
+            saveLocalState();
+            renderCategoryTabs();
+            renderCards();
+            showToast("¡Backup importado con éxito!");
+          } else {
+            alert("El archivo no tiene el formato correcto de Tecnomas.");
+          }
+        } catch (err) {
+          alert("Error al leer el archivo JSON: " + err.message);
+        }
+        event.target.value = ""; // Limpiar input file
+      };
+      reader.readAsText(file);
+    }
+
+    // --- Utilidades ---
 
     function openModal(id) {
       document.getElementById(id).classList.add("active");
