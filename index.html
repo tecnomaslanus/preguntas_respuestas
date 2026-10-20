@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TECNOMAS - Respuestas Rápidas (Online Cloud)</title>
+    <title>TECNOMAS - Respuestas Rápidas (Sync ID Cloud)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Oswald & Montserrat -->
@@ -91,18 +91,28 @@
                 </div>
                 <div>
                     <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-wider text-white flex items-center gap-2 uppercase">
-                        TECNOMAS <span class="text-xs px-2.5 py-0.5 rounded-full bg-tecnomas-yellow/15 text-tecnomas-yellow border border-tecnomas-yellow/30 font-sans font-semibold tracking-normal lowercase">modo online</span>
+                        TECNOMAS <span class="text-xs px-2.5 py-0.5 rounded-full bg-tecnomas-yellow/15 text-tecnomas-yellow border border-tecnomas-yellow/30 font-sans font-semibold tracking-normal lowercase">sync cloud</span>
                     </h1>
-                    <p class="text-xs text-tecnomas-muted font-medium">Base de Datos Centralizada en la Nube</p>
+                    <p class="text-xs text-tecnomas-muted font-medium">Respuestas Rápidas Multi-dispositivo</p>
                 </div>
             </div>
 
-            <!-- Top Actions -->
+            <!-- Top Actions & Sync Controls -->
             <div class="flex items-center gap-3 flex-wrap">
-                <!-- Online Status Badge (Clean & Non-Editable) -->
-                <div id="syncBadge" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-                    <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="syncStatusText">🟢 En Línea / Sincronizado</span>
+                <!-- Sync ID Status & Actions -->
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-tecnomas-cardBg border border-tecnomas-border">
+                    <div id="syncBadge" class="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+                        <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="syncStatusText">Conectado</span>
+                    </div>
+                    <span class="text-tecnomas-border">|</span>
+                    <span id="syncIdDisplay" class="text-xs font-mono font-bold text-tecnomas-yellow max-w-[120px] truncate" title="Tu Sync ID Actual">---</span>
+                    <button onclick="copySyncId()" title="Copiar Sync ID para vincular otro dispositivo" class="text-xs px-2 py-1 bg-tecnomas-purpleDark hover:bg-tecnomas-purpleDark/80 text-white rounded-lg transition flex items-center gap-1">
+                        <i class="fa-solid fa-copy text-[10px]"></i> Copiar ID
+                    </button>
+                    <button onclick="openConnectModal()" title="Conectar con otro Sync ID existente" class="text-xs px-2 py-1 bg-[#121216] hover:bg-tecnomas-cardHover text-tecnomas-muted hover:text-white rounded-lg border border-tecnomas-border transition flex items-center gap-1">
+                        <i class="fa-solid fa-link text-[10px]"></i> Conectar
+                    </button>
                 </div>
 
                 <!-- Backup TXT buttons -->
@@ -134,7 +144,7 @@
             <!-- Search input -->
             <div class="relative flex-1">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-tecnomas-muted"></i>
-                <input type="text" id="searchInput" oninput="renderQuestions()" placeholder="Buscar respuesta por palabra clave (ej: garantía, tarjeta, envío, local)..." 
+                <input type="text" id="searchInput" oninput="renderQuestions()" placeholder="Buscar respuesta por palabra clave (ej: garantía, cuotas, envío, local)..." 
                     class="w-full pl-11 pr-10 py-3 bg-tecnomas-cardBg border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted focus:outline-none focus:border-tecnomas-yellow focus:ring-1 focus:ring-tecnomas-yellow transition">
                 <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-tecnomas-muted hover:text-white">
                     <i class="fa-solid fa-xmark"></i>
@@ -176,7 +186,7 @@
 
     <!-- FOOTER -->
     <footer class="border-t border-tecnomas-border/60 py-4 px-4 text-center text-xs text-tecnomas-muted bg-[#0e0e12]">
-        <p><strong class="text-tecnomas-yellow font-display uppercase tracking-wider">TECNOMAS</strong> &copy; Respuestas Rápidas | Sistema Online de Gestión de Atención al Cliente</p>
+        <p><strong class="text-tecnomas-yellow font-display uppercase tracking-wider">TECNOMAS</strong> &copy; Respuestas Rápidas | Sistema de Gestión de Atención al Cliente</p>
     </footer>
 
     <!-- TOASTER NOTIFICATION -->
@@ -187,6 +197,38 @@
         <span id="toastMessage" class="font-medium">Respuesta copiada al portapapeles</span>
     </div>
 
+    <!-- MODAL: CONNECT EXISTING SYNC ID -->
+    <div id="connectModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-display text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-link text-tecnomas-yellow"></i> Conectar Dispositivo
+                </h3>
+                <button onclick="closeConnectModal()" class="text-tecnomas-muted hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <p class="text-xs text-tecnomas-muted mb-4 leading-relaxed">
+                Ingresa el **Sync ID** de tu otro dispositivo para sincronizar exactamente la misma base de datos de preguntas y respuestas en esta computadora.
+            </p>
+            <form onsubmit="connectExistingSyncId(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-tecnomas-muted mb-1.5">Sync ID (Bin ID)</label>
+                    <input type="text" id="inputConnectSyncId" required placeholder="Ej: 65a123f890123456..." 
+                        class="w-full px-3.5 py-2.5 bg-[#121216] border border-tecnomas-border rounded-xl text-sm text-slate-100 placeholder-tecnomas-muted/60 focus:outline-none focus:border-tecnomas-yellow font-mono">
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeConnectModal()" class="px-4 py-2 bg-tecnomas-purpleDark/50 hover:bg-tecnomas-purpleDark text-slate-300 text-xs font-semibold rounded-xl transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-tecnomas-yellow hover:bg-tecnomas-yellowHover text-tecnomas-purpleDeep font-display font-bold uppercase tracking-wider text-xs rounded-xl shadow-md transition">
+                        Conectar y Sincronizar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: CONFIRM DELETE QUESTION -->
     <div id="deleteModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-tecnomas-cardBg border border-tecnomas-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center">
@@ -194,7 +236,7 @@
                 <i class="fa-solid fa-trash-can"></i>
             </div>
             <h3 class="font-display text-xl font-bold text-white uppercase tracking-wider mb-2">¿Eliminar Respuesta?</h3>
-            <p class="text-xs text-tecnomas-muted mb-6 leading-relaxed">Esta acción eliminará la respuesta de la nube de forma permanente para todos los dispositivos.</p>
+            <p class="text-xs text-tecnomas-muted mb-6 leading-relaxed">Esta acción eliminará la respuesta de la nube de forma permanente para todos tus dispositivos vinculados.</p>
             <input type="hidden" id="deleteTargetId">
             <div class="flex gap-3 justify-center">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 bg-tecnomas-purpleDark/50 hover:bg-tecnomas-purpleDark text-slate-300 text-xs font-semibold rounded-xl transition">
@@ -289,14 +331,13 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC - STRICT ONLINE CLOUD DATABASE ENGINE -->
+    <!-- JAVASCRIPT LOGIC - SYNC ID CLOUD DATABASE ENGINE -->
     <script>
-        // --- IMMUTABLE ONLINE CLOUD CONFIGURATION ---
-        const API_KEY = "3ece9911-23ff-4eca-bb69-feaf41441344";
-        const CLOUD_BIN_ID = "tecnomas_respuestas_cloud_db";
-        const API_ENDPOINT = `https://api.jsonstorage.net/v1/json/${CLOUD_BIN_ID}?apiKey=${API_KEY}`;
+        // --- API CONFIGURATION ---
+        const MASTER_API_KEY = "3ece9911-23ff-4eca-bb69-feaf41441344";
+        const API_BASE_URL = "https://api.jsonstorage.net/v1/json";
 
-        // Initial Data for Tecnomas
+        // Initial Sample Data for Tecnomas
         const INITIAL_CATEGORIES = [
             "Medios de Pago",
             "Envíos y Entregas",
@@ -346,45 +387,26 @@
         ];
 
         // --- APP STATE ---
+        let syncId = localStorage.getItem("tecnomas_sync_id") || null;
         let categories = [];
         let questions = [];
         let currentCategory = "Todas";
 
         // --- APPLICATION LAUNCH ---
         window.onload = function() {
-            loadCloudData();
+            if (!syncId) {
+                initializeNewSyncBin();
+            } else {
+                document.getElementById("syncIdDisplay").innerText = syncId;
+                loadCloudData();
+            }
         };
 
-        // --- CLOUD SYNC ENGINE (ONLINE PURA) ---
+        // --- CLOUD SYNC ENGINE (SYNC ID) ---
 
-        async function loadCloudData() {
-            updateStatusBadge("loading", "Cargando desde la Nube...");
-            try {
-                const response = await fetch(API_ENDPOINT);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && Array.isArray(data.categories) && Array.isArray(data.questions)) {
-                        categories = data.categories;
-                        questions = data.questions;
-                        updateStatusBadge("online", "🟢 En Línea / Sincronizado");
-                    } else {
-                        await initializeCloudBin();
-                    }
-                } else if (response.status === 404) {
-                    await initializeCloudBin();
-                } else {
-                    updateStatusBadge("error", "🔴 Error de Conexión Nube");
-                }
-            } catch (error) {
-                console.error("Error al conectar con la base de datos en la nube:", error);
-                updateStatusBadge("error", "🔴 Sin Conexión Online");
-            }
-
-            renderCategoriesTab();
-            renderQuestions();
-        }
-
-        async function initializeCloudBin() {
+        async function initializeNewSyncBin() {
+            updateStatusBadge("loading", "Creando Sync ID...");
+            
             categories = [...INITIAL_CATEGORIES];
             questions = [...INITIAL_QUESTIONS];
 
@@ -396,24 +418,66 @@
             };
 
             try {
-                const response = await fetch(API_ENDPOINT, {
-                    method: "PUT",
+                const response = await fetch(`${API_BASE_URL}?apiKey=${MASTER_API_KEY}`, {
+                    method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
 
                 if (response.ok) {
-                    updateStatusBadge("online", "🟢 En Línea / Sincronizado");
+                    const data = await response.json();
+                    if (data.uri) {
+                        // Extract Bin ID from URI
+                        const parts = data.uri.split('/');
+                        syncId = parts[parts.length - 1];
+                        localStorage.setItem("tecnomas_sync_id", syncId);
+                        document.getElementById("syncIdDisplay").innerText = syncId;
+                        updateStatusBadge("online", "🟢 Conectado");
+                    }
                 } else {
-                    updateStatusBadge("error", "🔴 Error al inicializar Nube");
+                    fallbackLocalData();
                 }
             } catch (err) {
-                updateStatusBadge("error", "🔴 Error de Red");
+                console.error("Error al inicializar Sync ID en la nube:", err);
+                fallbackLocalData();
             }
+
+            renderCategoriesTab();
+            renderQuestions();
+        }
+
+        async function loadCloudData() {
+            if (!syncId) return;
+            updateStatusBadge("loading", "Sincronizando...");
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/${syncId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && Array.isArray(data.categories) && Array.isArray(data.questions)) {
+                        categories = data.categories;
+                        questions = data.questions;
+                        updateStatusBadge("online", "🟢 Conectado");
+                    } else {
+                        fallbackLocalData();
+                    }
+                } else {
+                    fallbackLocalData();
+                }
+            } catch (error) {
+                console.error("Error al cargar datos desde Sync ID:", error);
+                fallbackLocalData();
+            }
+
+            renderCategoriesTab();
+            renderQuestions();
         }
 
         async function syncToCloud() {
-            updateStatusBadge("loading", "Sincronizando Nube...");
+            saveToLocalCache();
+            if (!syncId) return;
+
+            updateStatusBadge("loading", "Guardando...");
 
             const payload = {
                 appName: "Tecnomas Respuestas Rapidas",
@@ -423,21 +487,40 @@
             };
 
             try {
-                const response = await fetch(API_ENDPOINT, {
+                const response = await fetch(`${API_BASE_URL}/${syncId}?apiKey=${MASTER_API_KEY}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
 
                 if (response.ok) {
-                    updateStatusBadge("online", "🟢 En Línea / Sincronizado");
+                    updateStatusBadge("online", "🟢 Conectado");
                 } else {
-                    updateStatusBadge("error", "🔴 Error al guardar cambios");
+                    updateStatusBadge("error", "🔴 Error de Guardado");
                 }
             } catch (err) {
                 console.error("Sincronización fallida:", err);
-                updateStatusBadge("error", "🔴 Sin Conexión a la Nube");
+                updateStatusBadge("error", "🔴 Modo Offline");
             }
+        }
+
+        function fallbackLocalData() {
+            updateStatusBadge("error", "🟡 Modo Cachi (Offline)");
+            const cachedCats = localStorage.getItem("tecnomas_cached_categories");
+            const cachedQues = localStorage.getItem("tecnomas_cached_questions");
+
+            if (cachedCats && cachedQues) {
+                categories = JSON.parse(cachedCats);
+                questions = JSON.parse(cachedQues);
+            } else {
+                categories = [...INITIAL_CATEGORIES];
+                questions = [...INITIAL_QUESTIONS];
+            }
+        }
+
+        function saveToLocalCache() {
+            localStorage.setItem("tecnomas_cached_categories", JSON.stringify(categories));
+            localStorage.setItem("tecnomas_cached_questions", JSON.stringify(questions));
         }
 
         function updateStatusBadge(state, message) {
@@ -448,14 +531,44 @@
             statusText.innerText = message;
 
             if (state === "online") {
-                badge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold";
+                badge.className = "flex items-center gap-2 text-xs font-semibold text-emerald-400";
                 dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
             } else if (state === "loading") {
-                badge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-semibold";
+                badge.className = "flex items-center gap-2 text-xs font-semibold text-amber-300";
                 dot.className = "w-2.5 h-2.5 rounded-full bg-amber-300 animate-spin";
             } else {
-                badge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-semibold";
+                badge.className = "flex items-center gap-2 text-xs font-semibold text-rose-400";
                 dot.className = "w-2.5 h-2.5 rounded-full bg-rose-400";
+            }
+        }
+
+        // --- SYNC ID MANAGEMENT MODALS ---
+
+        function copySyncId() {
+            if (!syncId) return;
+            execCommandCopy(syncId);
+            showToast("Sync ID copiado al portapapeles");
+        }
+
+        function openConnectModal() {
+            document.getElementById("connectModal").classList.remove("hidden");
+        }
+
+        function closeConnectModal() {
+            document.getElementById("connectModal").classList.add("hidden");
+        }
+
+        async function connectExistingSyncId(e) {
+            e.preventDefault();
+            const inputId = document.getElementById("inputConnectSyncId").value.trim();
+
+            if (inputId) {
+                syncId = inputId;
+                localStorage.setItem("tecnomas_sync_id", syncId);
+                document.getElementById("syncIdDisplay").innerText = syncId;
+                closeConnectModal();
+                await loadCloudData();
+                showToast("¡Dispositivo conectado al Sync ID!");
             }
         }
 
@@ -622,7 +735,7 @@
                 syncToCloud();
                 renderCategoriesTab();
                 renderQuestions();
-                showToast("Respuesta eliminada de la nube");
+                showToast("Respuesta eliminada");
             }
             closeDeleteModal();
         }
@@ -679,7 +792,7 @@
                     answer
                 };
                 questions.unshift(newQ);
-                showToast("Nueva respuesta guardada en la nube");
+                showToast("Nueva respuesta guardada");
             }
 
             syncToCloud();
@@ -761,8 +874,9 @@
 
         function exportConfig() {
             const backupData = {
-                appName: "TECNOMAS Respuestas Rapidas (Online)",
+                appName: "TECNOMAS Respuestas Rapidas",
                 exportDate: new Date().toISOString(),
+                syncId: syncId,
                 categories: categories,
                 questions: questions
             };
@@ -792,6 +906,12 @@
                     if (data.categories && Array.isArray(data.categories) && data.questions && Array.isArray(data.questions)) {
                         categories = data.categories;
                         questions = data.questions;
+
+                        if (data.syncId) {
+                            syncId = data.syncId;
+                            localStorage.setItem("tecnomas_sync_id", syncId);
+                            document.getElementById("syncIdDisplay").innerText = syncId;
+                        }
 
                         syncToCloud();
                         currentCategory = "Todas";
