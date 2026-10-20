@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tecnomas - Respuestas Rápidas</title>
   
-  <!-- Fuentes Google Fonts: Oswald y Montserrat -->
+  <!-- Google Fonts: Oswald y Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
@@ -445,7 +445,7 @@
         <div class="brand-icon">T</div>
         <div class="brand-text">
           <h1>Tecnomas</h1>
-          <p>Respuestas Rápidas Atencion al Cliente</p>
+          <p>Respuestas Rápidas Atención al Cliente</p>
         </div>
       </div>
       <div>
@@ -593,7 +593,6 @@
       renderCards();
     });
 
-    // Cargar datos locales de LocalStorage
     function loadLocalState() {
       const saved = localStorage.getItem("tecnomas_app_data");
       if (saved) {
@@ -621,10 +620,10 @@
 
     function updateSyncDisplay() {
       const display = document.getElementById("syncIdDisplay");
-      display.textContent = state.syncId ? state.syncId : "No generado";
+      display.textContent = state.syncId ? state.syncId : "No generado (Haz clic en Guardar)";
     }
 
-    // --- Sincronización con JsonStorage.net API ---
+    // --- Sincronización con JsonStorage.net API corregida ---
 
     async function saveToCloud() {
       showToast("Sincronizando con la nube...");
@@ -635,39 +634,55 @@
       };
 
       try {
-        if (!state.syncId) {
-          // Primera vez: Crear registro con POST
-          const response = await fetch(`https://api.jsonstorage.net/v1/json?apiKey=${JSONSTORAGE_API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-
-          if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-          
-          const result = await response.json();
-          // Extraer ID de la respuesta o URI
-          const createdId = result.uri ? result.uri.split('/').pop() : (result.id || result.objectId);
-
-          if (createdId) {
-            state.syncId = createdId;
-            localStorage.setItem("tecnomas_sync_id", createdId);
-            updateSyncDisplay();
-            showToast("¡Creado y guardado en la nube!");
-          } else {
-            showToast("Guardado en la nube con éxito.");
-          }
-        } else {
-          // Actualización: Usar PUT sobre el ID existente
-          const response = await fetch(`https://api.jsonstorage.net/v1/json/${state.syncId}?apiKey=${JSONSTORAGE_API_KEY}`, {
+        // Si hay un Sync ID guardado, intentamos actualizar con PUT
+        if (state.syncId) {
+          const putResponse = await fetch(`https://api.jsonstorage.net/v1/json/${state.syncId}?apiKey=${JSONSTORAGE_API_KEY}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
 
-          if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-          showToast("¡Actualizado en la nube!");
+          // Si da 404 (el ID ya no existe en el servidor), lo limpiamos y forzamos creación por POST abajo
+          if (putResponse.status === 404) {
+            state.syncId = "";
+            localStorage.removeItem("tecnomas_sync_id");
+          } else if (!putResponse.ok) {
+            throw new Error(`HTTP Error: ${putResponse.status}`);
+          } else {
+            showToast("¡Actualizado en la nube con éxito!");
+            return;
+          }
         }
+
+        // Si no hay Sync ID o falló por 404, creamos uno nuevo mediante POST
+        const postResponse = await fetch(`https://api.jsonstorage.net/v1/json?apiKey=${JSONSTORAGE_API_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!postResponse.ok) throw new Error(`HTTP Error: ${postResponse.status}`);
+        
+        const result = await postResponse.json();
+        // Extraer ID de la uri devuelta por jsonstorage.net
+        let createdId = "";
+        if (result.uri) {
+          const parts = result.uri.split('/');
+          createdId = parts[parts.length - 1];
+        }
+        if (!createdId) {
+          createdId = result.id || result.objectId || "";
+        }
+
+        if (createdId) {
+          state.syncId = createdId;
+          localStorage.setItem("tecnomas_sync_id", createdId);
+          updateSyncDisplay();
+          showToast("¡Nuevo Sync ID generado y guardado!");
+        } else {
+          showToast("Guardado en la nube con éxito.");
+        }
+
       } catch (err) {
         console.error("Cloud error:", err);
         alert("Error al guardar en la nube: " + err.message);
@@ -713,13 +728,13 @@
         }
       } catch (err) {
         console.error("Load cloud error:", err);
-        alert("Error al cargar datos desde la nube. Revisa el Sync ID o la conexión.");
+        alert("Error al cargar datos. Verifica que el Sync ID sea correcto.");
       }
     }
 
     function copySyncId() {
       if (!state.syncId) {
-        alert("Aún no tienes un Sync ID. Haz clic en 'Guardar en Nube' para generar uno.");
+        alert("Aún no tienes un Sync ID. Haz clic en 'Guardar en Nube' para generarlo.");
         return;
       }
       navigator.clipboard.writeText(state.syncId);
@@ -828,13 +843,11 @@
       if (!title || !content) return;
 
       if (id) {
-        // Editar
         const index = state.responses.findIndex(r => r.id === id);
         if (index !== -1) {
           state.responses[index] = { id, title, category, content };
         }
       } else {
-        // Crear
         const newResp = {
           id: Date.now().toString(),
           title,
@@ -907,7 +920,7 @@
       }
     }
 
-    // --- Copia al Portapapeles y Backup TXT ---
+    // --- Utilidades ---
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
@@ -929,8 +942,6 @@
       downloadAnchor.click();
       downloadAnchor.remove();
     }
-
-    // --- Utilidades ---
 
     function openModal(id) {
       document.getElementById(id).classList.add("active");
